@@ -1,0 +1,5 @@
+name: minecraft-rpg
+version: 1.0-SNAPSHOT
+main: br.com.rafaelfaustini.minecraftrpg.MinecraftRpg
+api-version: 1.16
+authors: [RafaelFaustini, RaphaelBaruffi]

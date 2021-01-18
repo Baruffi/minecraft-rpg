@@ -1,0 +1,4 @@
+Events:
+  welcome: "&bType &c/rpg &bto get started"
+Utils:
+  exception: "&bThere was an error loading the plugin"
