@@ -7,12 +7,15 @@ import java.sql.SQLException;
 
 import br.com.rafaelfaustini.minecraftrpg.MinecraftRpg;
 
+
 public class SqliteConnection {
 
     private Connection con = null;
 
     public Connection openConnection() throws SQLException {
         MinecraftRpg plugin = MinecraftRpg.getPlugin(MinecraftRpg.class);
+
+        //Class.forName("org.sqlite.JDBC");
 
         File file = new File(plugin.getDataFolder(), "database.db");
 
