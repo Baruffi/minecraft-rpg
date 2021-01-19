@@ -3,14 +3,13 @@ package br.com.rafaelfaustini.minecraftrpg.config;
 import java.io.File;
 import java.io.IOException;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 import br.com.rafaelfaustini.minecraftrpg.MinecraftRpg;
-import br.com.rafaelfaustini.minecraftrpg.utils.ExceptionUtil;
+import br.com.rafaelfaustini.minecraftrpg.utils.LoggingUtil;
 
 public class CustomConfig {
     private File file;
@@ -20,15 +19,21 @@ public class CustomConfig {
         createConfig(name);
     }
 
-    public FileConfiguration getConfig() {
-        return fileConfig;
+    public String get(String item) {
+        Object configItem = fileConfig.get(item);
+
+        if (configItem != null) {
+            return configItem.toString();
+        } else {
+            return null;
+        }
     }
 
     public void save() {
         try {
             fileConfig.save(file);
         } catch (IOException e) {
-            ExceptionUtil.tryException(e);
+            LoggingUtil.loadException(e.getMessage(), e);
         }
     }
 
@@ -36,12 +41,12 @@ public class CustomConfig {
         fileConfig = YamlConfiguration.loadConfiguration(file);
     }
 
-    public void set(String section, Object value) {
+    public void set(String section, String value) {
         try {
             fileConfig.set(section, value);
             fileConfig.save(file);
         } catch (IOException e) {
-            ExceptionUtil.tryException(e);
+            LoggingUtil.loadException(e.getMessage(), e);
         }
     }
 
@@ -59,8 +64,7 @@ public class CustomConfig {
 
             fileConfig.load(file);
         } catch (IOException | InvalidConfigurationException e) {
-            ExceptionUtil.tryException(e);
+            LoggingUtil.loadException(e.getMessage(), e);
         }
     }
-
 }

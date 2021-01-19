@@ -1,4 +1,6 @@
 Events:
-  welcome: "&bType &c/rpg &bto get started"
+  welcome: "&bType &c/class &bto get started"
 Utils:
-  exception: "&bThere was an error loading the plugin"
+  loadingException: "An error occurred while loading the plugin"
+  commandException: "An error occurred while executing a command"
+  eventException: "An error occurred while handling an event"

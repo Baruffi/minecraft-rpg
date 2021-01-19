@@ -7,21 +7,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import br.com.rafaelfaustini.minecraftrpg.MinecraftRpg;
-import br.com.rafaelfaustini.minecraftrpg.utils.ExceptionUtil;
+import br.com.rafaelfaustini.minecraftrpg.config.ConfigurationProvider;
 import br.com.rafaelfaustini.minecraftrpg.utils.TextUtil;
 
 public class JoinEvent implements Listener {
-    private static final MinecraftRpg PLUGIN = MinecraftRpg.getPlugin(MinecraftRpg.class);
-    private String exceptionMessage;
+    private static final String WELCOME_CONFIG_STRING = "Events.welcome";
+
+    private final String welcomeMessage;
 
     public JoinEvent() {
-        try {
-            exceptionMessage = TextUtil.coloredText(PLUGIN.messagesConfig.getConfig().get("Events.welcome").toString()); // Talvez
-                                                                                                           // virar um
-                                                                                                           // método ?
-        } catch (Exception e) {
-            ExceptionUtil.tryException(e);
-        }
+        welcomeMessage = ConfigurationProvider.getMessagesConfig().get(WELCOME_CONFIG_STRING);
     }
 
     @EventHandler
@@ -29,10 +24,9 @@ public class JoinEvent implements Listener {
         Player player = event.getPlayer();
 
         player.sendMessage(ChatColor.LIGHT_PURPLE + "-------------------------------");
-        player.sendMessage(ChatColor.LIGHT_PURPLE + PLUGIN.getName().toUpperCase() + " version 1.0");
-        player.sendMessage(exceptionMessage);
+        player.sendMessage(ChatColor.LIGHT_PURPLE + MinecraftRpg.getPlugin(MinecraftRpg.class).getName().toUpperCase()
+                + " VERSION 1.0");
+        player.sendMessage(TextUtil.coloredText(welcomeMessage));
         player.sendMessage(ChatColor.LIGHT_PURPLE + "-------------------------------");
-
     }
-
 }
