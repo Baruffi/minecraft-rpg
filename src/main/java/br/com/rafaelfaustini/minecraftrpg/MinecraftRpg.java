@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import br.com.rafaelfaustini.minecraftrpg.commands.ClassCommand;
 import br.com.rafaelfaustini.minecraftrpg.config.ConfigurationProvider;
 import br.com.rafaelfaustini.minecraftrpg.config.CustomConfig;
+import br.com.rafaelfaustini.minecraftrpg.events.ClickEvent;
 import br.com.rafaelfaustini.minecraftrpg.events.JoinEvent;
 
 public class MinecraftRpg extends JavaPlugin {
@@ -28,6 +29,7 @@ public class MinecraftRpg extends JavaPlugin {
         PluginManager pluginManager = server.getPluginManager();
 
         pluginManager.registerEvents(new JoinEvent(), this);
+        pluginManager.registerEvents(new ClickEvent(), this);
     }
 
     private void registerCommands() {
