@@ -8,25 +8,38 @@ import br.com.rafaelfaustini.minecraftrpg.config.ConfigurationProvider;
 
 public class LoggingUtil {
     private static final Logger LOGGER = MinecraftRpg.getPlugin(MinecraftRpg.class).getLogger();
-    private static final String LOADING_EXCEPTION_CONFIG_STRING = "Utils.loadingException";
-    private static final String COMMAND_EXCEPTION_CONFIG_STRING = "Utils.commandException";
-    private static final String EVENT_EXCEPTION_CONFIG_STRING = "Utils.eventException";
+
+    public static void info(String message) {
+        LOGGER.log(Level.INFO, message);
+    }
+
+    public static void warn(String message, Exception e) {
+        LOGGER.log(Level.WARNING, message, e);
+    }
+
+    public static void error(String message, Exception e) {
+        LOGGER.log(Level.SEVERE, message, e);
+    }
 
     public static void loadException(String message, Exception e) {
-        String exceptionMessage = ConfigurationProvider.getMessagesConfig().get(LOADING_EXCEPTION_CONFIG_STRING);
+        String exceptionMessage = ConfigurationProvider.getMessageConfig().getLoadingException();
 
-        LOGGER.log(Level.SEVERE, String.format("%s: %s", exceptionMessage, message), e);
+        error(prefix(exceptionMessage, message), e);
     }
 
     public static void commandException(String message, Exception e) {
-        String exceptionMessage = ConfigurationProvider.getMessagesConfig().get(COMMAND_EXCEPTION_CONFIG_STRING);
+        String exceptionMessage = ConfigurationProvider.getMessageConfig().getCommandException();
 
-        LOGGER.log(Level.WARNING, String.format("%s: %s", exceptionMessage, message), e);
+        warn(prefix(exceptionMessage, message), e);
     }
 
     public static void eventException(String message, Exception e) {
-        String exceptionMessage = ConfigurationProvider.getMessagesConfig().get(EVENT_EXCEPTION_CONFIG_STRING);
+        String exceptionMessage = ConfigurationProvider.getMessageConfig().getEventException();
 
-        LOGGER.log(Level.WARNING, String.format("%s: %s", exceptionMessage, message), e);
+        warn(prefix(exceptionMessage, message), e);
+    }
+
+    private static String prefix(String prefix, String message) {
+        return String.format("%s: %s", prefix, message);
     }
 }

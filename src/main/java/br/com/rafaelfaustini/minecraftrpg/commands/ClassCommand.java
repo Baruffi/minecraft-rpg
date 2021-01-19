@@ -13,9 +13,16 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import br.com.rafaelfaustini.minecraftrpg.config.ConfigurationProvider;
+import br.com.rafaelfaustini.minecraftrpg.config.model.GuiConfig;
 import br.com.rafaelfaustini.minecraftrpg.utils.TextUtil;
 
 public class ClassCommand implements CommandExecutor {
+    private final GuiConfig guiClassConfig;
+
+    public ClassCommand() {
+        guiClassConfig = ConfigurationProvider.getClassGuiConfig();
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -23,18 +30,8 @@ public class ClassCommand implements CommandExecutor {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
 
-                Inventory gui = Bukkit.createInventory(player, 9, "Pick your primary class below: ");
-
-                ItemStack warrior = getWarrior();
-                ItemStack mage = getMage();
-                ItemStack rogue = getRogue();
-                ItemStack druid = getDruid();
-                ItemStack alchemist = getAlchemist();
-                ItemStack bard = getBard();
-
-                ItemStack[] menuItems = { warrior, mage, rogue, druid, alchemist, bard };
-
-                gui.setContents(menuItems);
+                Inventory gui = Bukkit.createInventory(player, 9, guiClassConfig.getGuiTitle());
+                gui.setContents(guiClassConfig.getGuiItems());
 
                 player.openInventory(gui);
             }

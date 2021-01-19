@@ -1,13 +1,25 @@
 package br.com.rafaelfaustini.minecraftrpg.config;
 
-public class ConfigurationProvider {
-    private static CustomConfig messagesConfig;
+import br.com.rafaelfaustini.minecraftrpg.config.model.GuiConfig;
+import br.com.rafaelfaustini.minecraftrpg.config.model.MessageConfig;
 
-    public static CustomConfig getMessagesConfig() {
-        return messagesConfig;
+public class ConfigurationProvider {
+    private static MessageConfig messageConfig;
+    private static GuiConfig classGuiConfig;
+
+    public static void loadMessageConfig(CustomConfig messageConfig) {
+        ConfigurationProvider.messageConfig = new MessageConfig(messageConfig);
     }
 
-    public static void setMessagesConfig(CustomConfig messagesConfig) {
-        ConfigurationProvider.messagesConfig = messagesConfig;
+    public static void loadGuiConfig(CustomConfig guiConfig) {
+        ConfigurationProvider.classGuiConfig = new GuiConfig(guiConfig, "Class");
+    }
+
+    public static MessageConfig getMessageConfig() {
+        return messageConfig;
+    }
+
+    public static GuiConfig getClassGuiConfig() {
+        return classGuiConfig;
     }
 }

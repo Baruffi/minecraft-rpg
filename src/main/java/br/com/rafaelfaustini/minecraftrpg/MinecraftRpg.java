@@ -19,7 +19,8 @@ public class MinecraftRpg extends JavaPlugin {
     }
 
     private void loadConfigurations() {
-        ConfigurationProvider.setMessagesConfig(new CustomConfig("messages.yml"));
+        ConfigurationProvider.loadMessageConfig(new CustomConfig("messages.yml"));
+        ConfigurationProvider.loadGuiConfig(new CustomConfig("gui.yml"));
     }
 
     private void registerEvents() {

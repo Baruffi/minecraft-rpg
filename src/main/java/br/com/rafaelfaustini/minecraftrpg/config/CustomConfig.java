@@ -2,7 +2,11 @@ package br.com.rafaelfaustini.minecraftrpg.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -19,14 +23,31 @@ public class CustomConfig {
         createConfig(name);
     }
 
-    public String get(String item) {
-        Object configItem = fileConfig.get(item);
+    public <T> T get(String path, Class<T> clazz) {
+        T configItem = fileConfig.getObject(path, clazz);
 
         if (configItem != null) {
-            return configItem.toString();
+            return configItem;
         } else {
             return null;
         }
+    }
+
+    public <T> List<T> getAll(String path, Class<T> clazz) {
+        List<T> allValuesList = new ArrayList<>();
+
+        ConfigurationSection section = fileConfig.getConfigurationSection(path);
+        Set<String> keys = section.getKeys(false);
+
+        for (String key : keys) {
+            T value = fileConfig.getObject(path + "." + key, clazz);
+
+            if (value != null) {
+                allValuesList.add(value);
+            }
+        }
+
+        return allValuesList;
     }
 
     public void save() {
@@ -53,7 +74,9 @@ public class CustomConfig {
     private void createConfig(String name) {
         try {
             Plugin plugin = MinecraftRpg.getPlugin(MinecraftRpg.class);
-            System.out.println(plugin);
+
+            LoggingUtil.info(plugin.toString());
+
             file = new File(plugin.getDataFolder(), name);
             if (!file.exists()) {
                 file.getParentFile().mkdirs();
