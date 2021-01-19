@@ -2,11 +2,9 @@ package br.com.rafaelfaustini.minecraftrpg.config;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -23,31 +21,24 @@ public class CustomConfig {
         createConfig(name);
     }
 
-    public <T> T get(String path, Class<T> clazz) {
-        T configItem = fileConfig.getObject(path, clazz);
-
-        if (configItem != null) {
-            return configItem;
-        } else {
-            return null;
-        }
+    public Integer getInteger(String path) {
+        return Integer.valueOf(fileConfig.getInt(path));
     }
 
-    public <T> List<T> getAll(String path, Class<T> clazz) {
-        List<T> allValuesList = new ArrayList<>();
+    public List<Integer> getIntegerList(String path) {
+        return fileConfig.getIntegerList(path);
+    }
 
-        ConfigurationSection section = fileConfig.getConfigurationSection(path);
-        Set<String> keys = section.getKeys(false);
+    public String getString(String path) {
+        return fileConfig.getString(path);
+    }
 
-        for (String key : keys) {
-            T value = fileConfig.getObject(path + "." + key, clazz);
+    public List<String> getStringList(String path) {
+        return fileConfig.getStringList(path);
+    }
 
-            if (value != null) {
-                allValuesList.add(value);
-            }
-        }
-
-        return allValuesList;
+    public Set<String> getSectionKeys(String path) {
+        return fileConfig.getConfigurationSection(path).getKeys(false);
     }
 
     public void save() {

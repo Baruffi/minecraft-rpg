@@ -1,38 +1,32 @@
-// package br.com.rafaelfaustini.minecraftrpg.dao;
+package br.com.rafaelfaustini.minecraftrpg.dao;
 
-// import java.io.File;
-// import java.sql.Connection;
-// import java.sql.DriverManager;
-// import java.sql.SQLException;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
-// import br.com.rafaelfaustini.minecraftrpg.MinecraftRpg;
+import br.com.rafaelfaustini.minecraftrpg.MinecraftRpg;
 
-// public class SqliteConnection {
+public class SqliteConnection {
 
-//     private Connection con = null;
+    private Connection con = null;
 
-//     public Connection openConnection() throws SQLException {
-//         try {
-//             MinecraftRpg plugin = MinecraftRpg.getPlugin(MinecraftRpg.class);
+    public Connection openConnection() throws SQLException {
+        MinecraftRpg plugin = MinecraftRpg.getPlugin(MinecraftRpg.class);
 
-//             Class.forName("org.sqlite.JDBC"); // Unhandled Exception ClassNotFoundException
+        File file = new File(plugin.getDataFolder(), "database.db");
 
-//             File file = new File(plugin.getDataFolder(), "database.db");
+        String URL = "jdbc:sqlite:" + file;
 
-//             String URL = "jdbc:sqlite:" + file;
+        con = DriverManager.getConnection(URL);
 
-//             con = DriverManager.getConnection(URL); // Unhandled Exception SQLException
+        return con;
+    }
 
-//             return con;
-//         } catch (ClassNotFoundException e) {
-//             // TODO: handle exception
-//         }
-//     }
-
-//     public void close() throws SQLException {
-//         if (con != null) {
-//             con.close();
-//             con = null;
-//         }
-//     }
-// }
+    public void close() throws SQLException {
+        if (con != null) {
+            con.close();
+            con = null;
+        }
+    }
+}

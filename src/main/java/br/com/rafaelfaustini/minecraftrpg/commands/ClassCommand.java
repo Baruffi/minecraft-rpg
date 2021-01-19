@@ -15,6 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import br.com.rafaelfaustini.minecraftrpg.config.ConfigurationProvider;
 import br.com.rafaelfaustini.minecraftrpg.config.model.GuiConfig;
+import br.com.rafaelfaustini.minecraftrpg.config.model.GuiItemConfig;
 import br.com.rafaelfaustini.minecraftrpg.utils.TextUtil;
 
 public class ClassCommand implements CommandExecutor {
@@ -31,7 +32,17 @@ public class ClassCommand implements CommandExecutor {
                 Player player = (Player) sender;
 
                 Inventory gui = Bukkit.createInventory(player, 9, guiClassConfig.getGuiTitle());
-                gui.setContents(guiClassConfig.getGuiItems());
+
+                List<GuiItemConfig> guiItems = guiClassConfig.getGuiItems();
+                List<ItemStack> items = new ArrayList<>();
+
+                for (GuiItemConfig guiItem : guiItems) {
+                    ItemStack item = getSimpleItem(guiItem.getDisplayName(), guiItem.getMaterial(), guiItem.getLore());
+
+                    items.add(item);
+                }
+
+                gui.setContents(items.toArray(new ItemStack[0]));
 
                 player.openInventory(gui);
             }
@@ -40,40 +51,8 @@ public class ClassCommand implements CommandExecutor {
         return true;
     }
 
-    // TODO: criar arquivo de config custom para displaynames e lore de items de GUI
-
-    private ItemStack getWarrior() {
-        return getSimpleItem(Material.CHAINMAIL_CHESTPLATE, "&aWarrior", "&bA powerful warrior",
-                "&bthat pushes through with", "&cstrength and resilience!");
-    }
-
-    private ItemStack getMage() {
-        return getSimpleItem(Material.ENCHANTED_BOOK, "&aMage", "&bA scholar mage", "&bthat will enchant you with",
-                "&cwisdom and magic!");
-    }
-
-    private ItemStack getRogue() {
-        return getSimpleItem(Material.LEATHER_BOOTS, "&aRogue", "&bA fast rogue", "&bmoving quickly with his",
-                "&cwits and speed!");
-    }
-
-    private ItemStack getDruid() {
-        return getSimpleItem(Material.BONE, "&aDruid", "&bA wild druid", "&bthat fights by the side of",
-                "&canimals and nature!");
-    }
-
-    private ItemStack getAlchemist() {
-        return getSimpleItem(Material.POTION, "&aAlchemist", "&bA genius alchemist", "&ba powerful foe who can use",
-                "&cpotions and transmutation!");
-    }
-
-    private ItemStack getBard() {
-        return getSimpleItem(Material.NOTE_BLOCK, "&aBard", "&bA charming bard", "&bcheering everyone with",
-                "&cthe power of music!");
-    }
-
-    private ItemStack getSimpleItem(Material material, String displayName, String... lore) {
-        ItemStack item = new ItemStack(material);
+    private ItemStack getSimpleItem(String displayName, String material, List<String> lore) {
+        ItemStack item = new ItemStack(Material.getMaterial(material));
 
         ItemMeta itemMeta = item.getItemMeta();
 

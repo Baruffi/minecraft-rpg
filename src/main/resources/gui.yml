@@ -2,68 +2,44 @@ Class:
   title: "Pick your primary class below: "
   items:
     warrior:
-      ==: org.bukkit.inventory.ItemStack
-      type: CHAINMAIL_CHESTPLATE
-      meta:
-        ==: ItemMeta
-        meta-type: UNSPECIFIC
-        display-name: "§aWarrior"
-        lore:
-          - "§bA powerful warrior"
-          - "§bthat pushes through with"
-          - "§cstrength and resilience!"
+      displayName: "&aWarrior"
+      material: CHAINMAIL_CHESTPLATE
+      lore:
+        - "&bA powerful warrior"
+        - "&bthat pushes through with"
+        - "&cstrength and resilience!"
     mage:
-      ==: org.bukkit.inventory.ItemStack
-      type: ENCHANTED_BOOK
-      meta:
-        ==: ItemMeta
-        meta-type: UNSPECIFIC
-        display-name: "§aMage"
-        lore:
-          - "§bA scholar mage"
-          - "§bthat will enchant you with"
-          - "§cwisdom and magic!"
+      displayName: "&aMage"
+      material: ENCHANTED_BOOK
+      lore:
+        - "&bA scholar mage"
+        - "&bthat will enchant you with"
+        - "&cwisdom and magic!"
     rogue:
-      ==: org.bukkit.inventory.ItemStack
-      type: LEATHER_BOOTS
-      meta:
-        ==: ItemMeta
-        meta-type: UNSPECIFIC
-        display-name: "§aRogue"
-        lore:
-          - "§bA fast rogue"
-          - "§bmoving quickly with his"
-          - "§cwits and speed!"
+      displayName: "&aRogue"
+      material: LEATHER_BOOTS
+      lore:
+        - "&bA fast rogue"
+        - "&bmoving quickly with his"
+        - "&cwits and speed!"
     druid:
-      ==: org.bukkit.inventory.ItemStack
-      type: BONE
-      meta:
-        ==: ItemMeta
-        meta-type: UNSPECIFIC
-        display-name: "§aDruid"
-        lore:
-          - "§bA wild druid"
-          - "§bthat fights by the side of"
-          - "§canimals and nature!"
+      displayName: "&aDruid"
+      material: BONE
+      lore:
+        - "&bA wild druid"
+        - "&bthat fights by the side of"
+        - "&canimals and nature!"
     alchemist:
-      ==: org.bukkit.inventory.ItemStack
-      type: POTION
-      meta:
-        ==: ItemMeta
-        meta-type: UNSPECIFIC
-        display-name: "§aAlchemist"
-        lore:
-          - "§bA genius alchemist"
-          - "§ba powerful foe who can use"
-          - "§cpotions and transmutation!"
+      displayName: "&aAlchemist"
+      material: POTION
+      lore:
+        - "&bA genius alchemist"
+        - "&ba powerful foe who can use"
+        - "&cpotions and transmutation!"
     bard:
-      ==: org.bukkit.inventory.ItemStack
-      type: NOTE_BLOCK
-      meta:
-        ==: ItemMeta
-        meta-type: UNSPECIFIC
-        display-name: "§aBard"
-        lore:
-          - "§bA charming bard"
-          - "§bcheering everyone with"
-          - "§cthe power of music!"
+      displayName: "&aBard"
+      material: NOTE_BLOCK
+      lore:
+        - "&bA charming bard"
+        - "&bcheering everyone with"
+        - "&cthe power of music!"

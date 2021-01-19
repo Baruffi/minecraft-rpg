@@ -9,10 +9,10 @@ public class MessageConfig {
     private String eventException;
 
     public MessageConfig(CustomConfig customMessages) {
-        welcome = customMessages.get("Events.welcome", String.class);
-        loadingException = customMessages.get("Utils.loadingException", String.class);
-        commandException = customMessages.get("Utils.commandException", String.class);
-        eventException = customMessages.get("Utils.eventException", String.class);
+        welcome = customMessages.getString("Events.welcome");
+        loadingException = customMessages.getString("Utils.loadingException");
+        commandException = customMessages.getString("Utils.commandException");
+        eventException = customMessages.getString("Utils.eventException");
     }
 
     public String getWelcome() {
