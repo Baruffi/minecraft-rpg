@@ -16,7 +16,7 @@ public class JoinEvent implements Listener {
 
     public JoinEvent() {
         try {
-            exceptionMessage = TextUtil.coloredText(PLUGIN.getConfig().get("Utils.exception").toString()); // Talvez
+            exceptionMessage = TextUtil.coloredText(PLUGIN.messagesConfig.getConfig().get("Events.welcome").toString()); // Talvez
                                                                                                            // virar um
                                                                                                            // método ?
         } catch (Exception e) {

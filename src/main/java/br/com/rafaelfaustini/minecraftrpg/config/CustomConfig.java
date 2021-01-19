@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
+import br.com.rafaelfaustini.minecraftrpg.MinecraftRpg;
 import br.com.rafaelfaustini.minecraftrpg.utils.ExceptionUtil;
 
 public class CustomConfig {
@@ -46,7 +47,8 @@ public class CustomConfig {
 
     private void createConfig(String name) {
         try {
-            Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("MinecraftRpg");
+            Plugin plugin = MinecraftRpg.getPlugin(MinecraftRpg.class);
+            System.out.println(plugin);
             file = new File(plugin.getDataFolder(), name);
             if (!file.exists()) {
                 file.getParentFile().mkdirs();
