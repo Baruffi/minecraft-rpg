@@ -36,5 +36,5 @@ These items will have the following notable attributes:
 
 The plugin will also generate random quests for each player to complete. Completing a quest will earn them a nice reward, but they are all optional. Also, as the player levels up, quests will become more challenging, but offer better rewards as well.
 
-- Objective: (Kill 15 creepers to get a award)
+- Objective: (Kill 15 creepers to get an award)
 - Award: (XP Boost for X seconds)
