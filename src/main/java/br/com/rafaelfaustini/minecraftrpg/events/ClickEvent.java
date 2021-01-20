@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
@@ -37,30 +38,31 @@ public class ClickEvent implements Listener {
 
                     // TODO: register the player class in the database
 
+                    Inventory playerInventory = player.getInventory();
+
                     switch (selectedClass) {
                         case WARRIOR:
-                            player.getInventory().addItem(new ItemStack(Material.WOODEN_AXE));
-                            player.getInventory().addItem(new ItemStack(Material.CHAINMAIL_CHESTPLATE));
+                            playerInventory.addItem(new ItemStack(Material.WOODEN_AXE),
+                                    new ItemStack(Material.CHAINMAIL_CHESTPLATE));
                             break;
                         case MAGE:
-                            player.getInventory().addItem(new ItemStack(Material.WRITABLE_BOOK));
-                            player.getInventory().addItem(new ItemStack(Material.ENCHANTING_TABLE));
+                            playerInventory.addItem(new ItemStack(Material.WRITABLE_BOOK),
+                                    new ItemStack(Material.ENCHANTING_TABLE));
                             break;
                         case ROGUE:
-                            player.getInventory().addItem(new ItemStack(Material.WOODEN_SWORD));
-                            player.getInventory().addItem(new ItemStack(Material.LEATHER_BOOTS));
+                            playerInventory.addItem(new ItemStack(Material.WOODEN_SWORD),
+                                    new ItemStack(Material.LEATHER_BOOTS));
                             break;
                         case DRUID:
-                            player.getInventory().addItem(new ItemStack(Material.BONE, 10));
-                            player.getInventory().addItem(new ItemStack(Material.SADDLE));
+                            playerInventory.addItem(new ItemStack(Material.BONE, 10), new ItemStack(Material.SADDLE));
                             break;
                         case ALCHEMIST:
-                            player.getInventory().addItem(new ItemStack(Material.GLASS_BOTTLE, 8));
-                            player.getInventory().addItem(new ItemStack(Material.BREWING_STAND));
+                            playerInventory.addItem(new ItemStack(Material.GLASS_BOTTLE, 8),
+                                    new ItemStack(Material.BREWING_STAND));
                             break;
                         case BARD:
-                            player.getInventory().addItem(new ItemStack(Material.JUKEBOX));
-                            player.getInventory().addItem(new ItemStack(Material.MUSIC_DISC_CAT));
+                            playerInventory.addItem(new ItemStack(Material.JUKEBOX),
+                                    new ItemStack(Material.MUSIC_DISC_CAT));
                             break;
                         default:
                             break;
