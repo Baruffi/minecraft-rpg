@@ -9,7 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import br.com.rafaelfaustini.minecraftrpg.commands.ClassCommand;
 import br.com.rafaelfaustini.minecraftrpg.config.ConfigurationProvider;
 import br.com.rafaelfaustini.minecraftrpg.config.CustomConfig;
-import br.com.rafaelfaustini.minecraftrpg.dao.PlayerDAO;
+import br.com.rafaelfaustini.minecraftrpg.dao.UserDAO;
 import br.com.rafaelfaustini.minecraftrpg.dao.SqliteConnection;
 import br.com.rafaelfaustini.minecraftrpg.events.ClassEvent;
 import br.com.rafaelfaustini.minecraftrpg.events.JoinEvent;
@@ -46,9 +46,8 @@ public class MinecraftRpg extends JavaPlugin {
         SqliteConnection sqliteConnection = new SqliteConnection();
         try {
             Connection con = sqliteConnection.openConnection();
-            PlayerDAO playerDao = new PlayerDAO(con);
+            UserDAO userDAO = new UserDAO(con);
             sqliteConnection.close();
-
         } catch (Exception e) {
             LoggingUtil.error("Database Open Error", e);
             // TODO: handle exception
