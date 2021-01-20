@@ -8,7 +8,7 @@ import br.com.rafaelfaustini.minecraftrpg.interfaces.IDao;
 import br.com.rafaelfaustini.minecraftrpg.model.UserEntity;
 import br.com.rafaelfaustini.minecraftrpg.utils.LoggingUtil;
 
-public class UserDAO implements IDao<UserEntity> {
+public class UserDAO implements IDao<String, UserEntity> { // <Type of id, entity>
 
     private Connection conexao;
 
@@ -28,7 +28,7 @@ public class UserDAO implements IDao<UserEntity> {
     }
 
     @Override
-    public UserEntity get(long id) {
+    public UserEntity get(String uuid) {
         return null;
     }
 
@@ -38,29 +38,40 @@ public class UserDAO implements IDao<UserEntity> {
     }
 
     @Override
-    public void insert(UserEntity userentity) {
+    public void insert(UserEntity userEntity) {
         try {
-            String sql = "INSERT INTO users VALUES ( uuid text PRIMARY KEY, money real )";
+            String sql = "INSERT INTO users (uuid, last_account_name) VALUES ( ?, ? )";
             PreparedStatement ps = conexao.prepareStatement(sql);
+            ps.setString(1, userEntity.getUUID());
+            ps.setString(2, userEntity.getLastAccountName());
             ps.execute();
         } catch (Exception e) {
-            LoggingUtil.error("Database Creating UserEntity", e);
+            LoggingUtil.error("Database Inserting UserEntity", e);
         }
     }
 
     @Override
-    public void update(long id, UserEntity p) {
+    public void update(UserEntity userEntity) {
         try {
-            String sql = "INSERT INTO users VALUES ( uuid text PRIMARY KEY, money real )";
+            String sql = "UPDATE users SET last_account_name=? where uuid=?";
             PreparedStatement ps = conexao.prepareStatement(sql);
+            ps.setString(1, userEntity.getLastAccountName());
+            ps.setString(2, userEntity.getUUID());
             ps.execute();
         } catch (Exception e) {
-            LoggingUtil.error("Database Creating UserEntity", e);
+            LoggingUtil.error("Database Updating UserEntity", e);
         }
     }
 
     @Override
-    public void delete(long id) {
-
+    public void delete(String uuid) {
+        try {
+            String sql = "DELETE users where uuid=?";
+            PreparedStatement ps = conexao.prepareStatement(sql);
+            ps.setString(1, uuid);
+            ps.execute();
+        } catch (Exception e) {
+            LoggingUtil.error("Database Updating UserEntity", e);
+        }
     }
 }

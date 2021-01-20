@@ -2,7 +2,7 @@ package br.com.rafaelfaustini.minecraftrpg.model;
 
 public class UserEntity {
     private String UUID;
-    private String last_account_name;
+    private String lastAccountName;
 
     public String getUUID() {
         return UUID;
@@ -10,10 +10,10 @@ public class UserEntity {
     public void setUUID(String UUID) {
         this.UUID = UUID;
     }
-    public String getLast_account_name() {
-        return last_account_name;
+    public String getLastAccountName() {
+        return lastAccountName;
     }
-    public void setLast_account_name(String last_account_name) {
-        this.last_account_name = last_account_name;
+    public void setLastAccountName(String lastAccountName) {
+        this.lastAccountName = lastAccountName;
     }
 }

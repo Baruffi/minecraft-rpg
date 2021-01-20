@@ -2,15 +2,15 @@ package br.com.rafaelfaustini.minecraftrpg.interfaces;
 
 import java.util.List;
 
-public interface IDao<T> {
+public interface IDao<I,T> { //<Type of id, entity>
 
-    T get(long id);
+    T get(I id);
 
     List<T> getAll();
 
     void insert(T t);
 
-    void update(long id, T obj);
+    void update(T t);
 
-    void delete(long id);
+    void delete(I id);
 }
