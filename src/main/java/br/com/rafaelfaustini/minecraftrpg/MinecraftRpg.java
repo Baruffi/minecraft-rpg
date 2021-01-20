@@ -11,7 +11,7 @@ import br.com.rafaelfaustini.minecraftrpg.config.ConfigurationProvider;
 import br.com.rafaelfaustini.minecraftrpg.config.CustomConfig;
 import br.com.rafaelfaustini.minecraftrpg.dao.PlayerDAO;
 import br.com.rafaelfaustini.minecraftrpg.dao.SqliteConnection;
-import br.com.rafaelfaustini.minecraftrpg.events.ClickEvent;
+import br.com.rafaelfaustini.minecraftrpg.events.ClassEvent;
 import br.com.rafaelfaustini.minecraftrpg.events.JoinEvent;
 import br.com.rafaelfaustini.minecraftrpg.utils.LoggingUtil;
 
@@ -35,7 +35,7 @@ public class MinecraftRpg extends JavaPlugin {
         PluginManager pluginManager = server.getPluginManager();
 
         pluginManager.registerEvents(new JoinEvent(), this);
-        pluginManager.registerEvents(new ClickEvent(), this);
+        pluginManager.registerEvents(new ClassEvent(), this);
     }
 
     private void registerCommands() {
