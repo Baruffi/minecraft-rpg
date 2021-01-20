@@ -38,7 +38,7 @@ Class:
         - "&cpotions and transmutation!"
     bard:
       displayName: "&aBard"
-      material: NOTE_BLOCK
+      material: MUSIC_DISC_CAT
       lore:
         - "&bA charming bard"
         - "&bcheering everyone with"

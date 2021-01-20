@@ -1,5 +1,6 @@
 Events:
   welcome: "&bType &c/class &bto get started"
+  classChoice: "&bYou have chosen &c%s&c!"
 Utils:
   loadingException: "An error occurred while loading the plugin"
   commandException: "An error occurred while executing a command"

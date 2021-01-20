@@ -4,12 +4,14 @@ import br.com.rafaelfaustini.minecraftrpg.config.CustomConfig;
 
 public class MessageConfig {
     private String welcome;
+    private String classChoice;
     private String loadingException;
     private String commandException;
     private String eventException;
 
     public MessageConfig(CustomConfig customMessages) {
         welcome = customMessages.getString("Events.welcome");
+        classChoice = customMessages.getString("Events.classChoice");
         loadingException = customMessages.getString("Utils.loadingException");
         commandException = customMessages.getString("Utils.commandException");
         eventException = customMessages.getString("Utils.eventException");
@@ -21,6 +23,14 @@ public class MessageConfig {
 
     public void setWelcome(String welcome) {
         this.welcome = welcome;
+    }
+
+    public String getClassChoice() {
+        return classChoice;
+    }
+
+    public void setClassChoice(String classChoice) {
+        this.classChoice = classChoice;
     }
 
     public String getLoadingException() {
