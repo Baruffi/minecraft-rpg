@@ -9,12 +9,11 @@ import br.com.rafaelfaustini.minecraftrpg.utils.LoggingUtil;
 
 import org.bukkit.entity.Player;
 
-
-public class PlayerDAO implements IDao<Player>{
+public class PlayerDAO implements IDao<Player> {
 
     private Connection conexao;
-    
-    private void createTable(){
+
+    private void createTable() {
         try {
             String sql = "CREATE TABLE IF NOT EXISTS player ( uuid text PRIMARY KEY, money real )";
             PreparedStatement ps = conexao.prepareStatement(sql);
@@ -24,33 +23,33 @@ public class PlayerDAO implements IDao<Player>{
         }
     }
 
-    public PlayerDAO(Connection  con){
+    public PlayerDAO(Connection con) {
         conexao = con;
         createTable();
     }
-    
+
     @Override
-    public Player get(long id){
+    public Player get(long id) {
         return null;
     }
 
     @Override
-    public List<Player> getAll(){
+    public List<Player> getAll() {
         return null;
     }
-    
+
     @Override
-    public void insert(Player player){
-        
+    public void insert(Player player) {
+
     }
-    
+
     @Override
-    public void update(long id, Player p){
-        
+    public void update(long id, Player p) {
+
     }
-    
+
     @Override
-    public void delete(long id){
-        
+    public void delete(long id) {
+
     }
 }

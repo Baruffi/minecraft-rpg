@@ -25,7 +25,6 @@ public class MinecraftRpg extends JavaPlugin {
         testDatabase();
     }
 
-
     private void loadConfigurations() {
         ConfigurationProvider.loadMessageConfig(new CustomConfig("messages.yml"));
         ConfigurationProvider.loadGuiConfig(new CustomConfig("gui.yml"));
@@ -43,7 +42,7 @@ public class MinecraftRpg extends JavaPlugin {
         getCommand("class").setExecutor(new ClassCommand());
     }
 
-    private void testDatabase(){
+    private void testDatabase() {
         SqliteConnection sqliteConnection = new SqliteConnection();
         try {
             Connection con = sqliteConnection.openConnection();
@@ -52,7 +51,7 @@ public class MinecraftRpg extends JavaPlugin {
 
         } catch (Exception e) {
             LoggingUtil.error("Database Open Error", e);
-            //TODO: handle exception
+            // TODO: handle exception
         }
     }
 }

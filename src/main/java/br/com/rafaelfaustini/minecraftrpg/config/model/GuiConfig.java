@@ -14,7 +14,7 @@ public class GuiConfig {
         Set<String> itemKeys = customGui.getSectionKeys(name + ".items");
 
         for (String itemKey : itemKeys) {
-            GuiItemConfig guiItemConfig = new GuiItemConfig();
+            GuiItemConfig guiItemConfig = new GuiItemConfig(itemKey);
             String itemPath = name + ".items." + itemKey;
 
             guiItemConfig.setDisplayName(customGui.getString(itemPath + ".displayName"));
