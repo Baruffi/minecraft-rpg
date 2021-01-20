@@ -29,4 +29,9 @@ public class SqliteConnection {
             con = null;
         }
     }
+
+	public Connection getCon() {
+		return con;
+	}
+
 }

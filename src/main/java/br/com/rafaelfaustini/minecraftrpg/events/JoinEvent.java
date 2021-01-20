@@ -9,6 +9,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import br.com.rafaelfaustini.minecraftrpg.MinecraftRpg;
 import br.com.rafaelfaustini.minecraftrpg.config.ConfigurationProvider;
 import br.com.rafaelfaustini.minecraftrpg.config.model.MessageConfig;
+import br.com.rafaelfaustini.minecraftrpg.model.UserEntity;
+import br.com.rafaelfaustini.minecraftrpg.service.UserService;
 import br.com.rafaelfaustini.minecraftrpg.utils.TextUtil;
 
 public class JoinEvent implements Listener {
@@ -27,5 +29,20 @@ public class JoinEvent implements Listener {
                 + " VERSION 1.0");
         player.sendMessage(TextUtil.coloredText(messageConfig.getWelcome()));
         player.sendMessage(ChatColor.LIGHT_PURPLE + "-------------------------------");
+
+        insertPlayer(player);
+    }
+
+    private void insertPlayer(Player player) {
+        String playerUUID = player.getUniqueId().toString();
+        String playerName = player.getName();
+
+        UserService userService = new UserService();
+        UserEntity user = userService.get(playerUUID);
+
+        if(user == null){ // TODO CHECK IF DISPLAYNAME CHANGED IF YES UPDATE
+            user = new UserEntity(playerUUID, playerName);
+            userService.insert(user);
+        }
     }
 }

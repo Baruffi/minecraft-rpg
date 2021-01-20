@@ -16,4 +16,11 @@ public class UserEntity {
     public void setLastAccountName(String lastAccountName) {
         this.lastAccountName = lastAccountName;
     }
+	public UserEntity(String uUID, String lastAccountName) {
+		UUID = uUID;
+		this.lastAccountName = lastAccountName;
+    }
+    public UserEntity() {
+
+	}
 }

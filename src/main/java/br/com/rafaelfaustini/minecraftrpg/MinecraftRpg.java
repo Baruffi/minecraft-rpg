@@ -13,6 +13,7 @@ import br.com.rafaelfaustini.minecraftrpg.dao.UserDAO;
 import br.com.rafaelfaustini.minecraftrpg.dao.SqliteConnection;
 import br.com.rafaelfaustini.minecraftrpg.events.ClassEvent;
 import br.com.rafaelfaustini.minecraftrpg.events.JoinEvent;
+import br.com.rafaelfaustini.minecraftrpg.service.UserService;
 import br.com.rafaelfaustini.minecraftrpg.utils.LoggingUtil;
 
 public class MinecraftRpg extends JavaPlugin {
@@ -22,7 +23,6 @@ public class MinecraftRpg extends JavaPlugin {
         loadConfigurations();
         registerEvents();
         registerCommands();
-        testDatabase();
     }
 
     private void loadConfigurations() {
@@ -42,15 +42,4 @@ public class MinecraftRpg extends JavaPlugin {
         getCommand("class").setExecutor(new ClassCommand());
     }
 
-    private void testDatabase() {
-        SqliteConnection sqliteConnection = new SqliteConnection();
-        try {
-            Connection con = sqliteConnection.openConnection();
-            UserDAO userDAO = new UserDAO(con);
-            sqliteConnection.close();
-        } catch (Exception e) {
-            LoggingUtil.error("Database Open Error", e);
-            // TODO: handle exception
-        }
-    }
 }
