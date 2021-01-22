@@ -2,7 +2,7 @@ Commands:
   classAlreadyChosen: "&bYou have already chosen &c%s&b!"
 Events:
   welcome: "&bType &c/class &bto get started"
-  classChoice: "&bYou have chosen &c%s&b!"
+  classChoice: "&bYou have chosen %s&b!"
 Utils:
   loadingException: "An error occurred while loading the plugin"
   commandException: "An error occurred while executing a command"
