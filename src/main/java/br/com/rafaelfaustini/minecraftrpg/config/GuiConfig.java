@@ -1,10 +1,8 @@
-package br.com.rafaelfaustini.minecraftrpg.config.model;
+package br.com.rafaelfaustini.minecraftrpg.config;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import br.com.rafaelfaustini.minecraftrpg.config.CustomConfig;
 
 public class GuiConfig {
     private String guiTitle;

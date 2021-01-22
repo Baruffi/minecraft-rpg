@@ -1,6 +1,4 @@
-package br.com.rafaelfaustini.minecraftrpg.config.model;
-
-import br.com.rafaelfaustini.minecraftrpg.config.CustomConfig;
+package br.com.rafaelfaustini.minecraftrpg.config;
 
 public class MessageConfig {
     private String welcome;

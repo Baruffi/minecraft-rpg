@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import br.com.rafaelfaustini.minecraftrpg.MinecraftRpg;
 import br.com.rafaelfaustini.minecraftrpg.config.ConfigurationProvider;
-import br.com.rafaelfaustini.minecraftrpg.config.model.MessageConfig;
+import br.com.rafaelfaustini.minecraftrpg.config.MessageConfig;
 import br.com.rafaelfaustini.minecraftrpg.model.UserEntity;
 import br.com.rafaelfaustini.minecraftrpg.service.UserService;
 import br.com.rafaelfaustini.minecraftrpg.utils.TextUtil;

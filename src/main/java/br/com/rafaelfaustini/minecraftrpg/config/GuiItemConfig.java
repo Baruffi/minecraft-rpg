@@ -1,4 +1,4 @@
-package br.com.rafaelfaustini.minecraftrpg.config.model;
+package br.com.rafaelfaustini.minecraftrpg.config;
 
 import java.util.List;
 

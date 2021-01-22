@@ -10,9 +10,9 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import br.com.rafaelfaustini.minecraftrpg.config.ConfigurationProvider;
-import br.com.rafaelfaustini.minecraftrpg.config.model.GuiConfig;
-import br.com.rafaelfaustini.minecraftrpg.config.model.GuiItemConfig;
-import br.com.rafaelfaustini.minecraftrpg.config.model.MessageConfig;
+import br.com.rafaelfaustini.minecraftrpg.config.GuiConfig;
+import br.com.rafaelfaustini.minecraftrpg.config.GuiItemConfig;
+import br.com.rafaelfaustini.minecraftrpg.config.MessageConfig;
 import br.com.rafaelfaustini.minecraftrpg.enums.ClassEnum;
 import br.com.rafaelfaustini.minecraftrpg.model.UserClassEntity;
 import br.com.rafaelfaustini.minecraftrpg.service.UserClassService;

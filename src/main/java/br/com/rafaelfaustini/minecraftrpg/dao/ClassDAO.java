@@ -20,7 +20,7 @@ public class ClassDAO implements IDao<Long, ClassEntity> { // <Type of id, entit
 
     @Override
     public void createTable() throws Exception {
-        String sql = "CREATE TABLE IF NOT EXISTS CLASSES ( ID INTEGER PRIMARY KEY, NAME TEXT )";
+        String sql = "CREATE TABLE IF NOT EXISTS CLASSES ( ID INTEGER PRIMARY KEY, NAME TEXT, UNIQUE (NAME) )";
         PreparedStatement ps = connection.prepareStatement(sql);
 
         ps.execute();

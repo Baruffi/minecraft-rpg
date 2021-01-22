@@ -14,9 +14,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import br.com.rafaelfaustini.minecraftrpg.config.ConfigurationProvider;
-import br.com.rafaelfaustini.minecraftrpg.config.model.GuiConfig;
-import br.com.rafaelfaustini.minecraftrpg.config.model.GuiItemConfig;
-import br.com.rafaelfaustini.minecraftrpg.config.model.MessageConfig;
+import br.com.rafaelfaustini.minecraftrpg.config.GuiConfig;
+import br.com.rafaelfaustini.minecraftrpg.config.GuiItemConfig;
+import br.com.rafaelfaustini.minecraftrpg.config.MessageConfig;
 import br.com.rafaelfaustini.minecraftrpg.model.ClassEntity;
 import br.com.rafaelfaustini.minecraftrpg.model.UserClassEntity;
 import br.com.rafaelfaustini.minecraftrpg.service.ClassService;
