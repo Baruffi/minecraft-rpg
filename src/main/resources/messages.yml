@@ -1,5 +1,5 @@
 Commands:
-  classAlreadyChosen: "&bYou have already chosen &c%s&b!"
+  classAlreadyChosen: "&bYou have already chosen %s&b!"
 Events:
   welcome: "&bType &c/class &bto get started"
   classChoice: "&bYou have chosen %s&b!"
