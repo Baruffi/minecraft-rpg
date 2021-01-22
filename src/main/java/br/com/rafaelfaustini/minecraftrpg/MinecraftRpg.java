@@ -13,9 +13,9 @@ import br.com.rafaelfaustini.minecraftrpg.dao.ClassDAO;
 import br.com.rafaelfaustini.minecraftrpg.dao.SqliteConnection;
 import br.com.rafaelfaustini.minecraftrpg.dao.UserClassDAO;
 import br.com.rafaelfaustini.minecraftrpg.dao.UserDAO;
-import br.com.rafaelfaustini.minecraftrpg.events.CastEvent;
 import br.com.rafaelfaustini.minecraftrpg.events.ClassEvent;
 import br.com.rafaelfaustini.minecraftrpg.events.JoinEvent;
+import br.com.rafaelfaustini.minecraftrpg.events.SkillEvent;
 import br.com.rafaelfaustini.minecraftrpg.utils.LoggingUtil;
 
 public class MinecraftRpg extends JavaPlugin {
@@ -39,7 +39,7 @@ public class MinecraftRpg extends JavaPlugin {
 
         pluginManager.registerEvents(new JoinEvent(), this);
         pluginManager.registerEvents(new ClassEvent(), this);
-        pluginManager.registerEvents(new CastEvent(), this);
+        pluginManager.registerEvents(new SkillEvent(), this);
     }
 
     private void registerCommands() {

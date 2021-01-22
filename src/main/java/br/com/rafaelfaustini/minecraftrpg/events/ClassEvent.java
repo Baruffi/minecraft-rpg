@@ -2,6 +2,7 @@ package br.com.rafaelfaustini.minecraftrpg.events;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -116,7 +117,7 @@ public class ClassEvent implements Listener {
         player.sendMessage(TextUtil.coloredText(message));
     }
 
-    private void cancelEvent(InventoryClickEvent event) {
+    private void cancelEvent(Cancellable event) {
         event.setCancelled(true);
     }
 

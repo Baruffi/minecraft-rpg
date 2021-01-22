@@ -1,8 +1,10 @@
 Commands:
-  classAlreadyChosen: "&bYou have already chosen %s&b!"
+  classAlreadyChosen: "&bYou have already chosen the %s &bclass!"
 Events:
   welcome: "&bType &c/class &bto get started"
-  classChoice: "&bYou have chosen %s&b!"
+  classChoice: "&bYou have chosen the %s &bclass!"
+  skillChoice: "&bYou have selected the %s &bskill!"
+  skillCast: "&bYou have casted the %s &bskill!"
 Utils:
   loadingException: "An error occurred while loading the plugin"
   commandException: "An error occurred while executing a command"

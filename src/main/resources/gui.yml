@@ -43,3 +43,12 @@ Class:
         - "&bA charming bard"
         - "&bcheering everyone with"
         - "&cthe power of music!"
+ActiveSkill:
+  title: "Choose one of the available active skills: "
+  items:
+    fireball:
+      displayName: "&aFireball"
+      material: FIRE_CHARGE
+      lore:
+        - "&bA well known fire spell"
+        - "&ccapable of immense destruction."

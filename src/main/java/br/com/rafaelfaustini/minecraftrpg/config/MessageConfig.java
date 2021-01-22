@@ -4,6 +4,8 @@ public class MessageConfig {
     private String welcome;
     private String classChoice;
     private String classAlreadyChosen;
+    private String skillChoice;
+    private String skillCast;
     private String loadingException;
     private String commandException;
     private String eventException;
@@ -12,6 +14,8 @@ public class MessageConfig {
         welcome = customMessages.getString("Events.welcome");
         classChoice = customMessages.getString("Events.classChoice");
         classAlreadyChosen = customMessages.getString("Commands.classAlreadyChosen");
+        skillChoice = customMessages.getString("Events.skillChoice");
+        skillCast = customMessages.getString("Events.skillCast");
         loadingException = customMessages.getString("Utils.loadingException");
         commandException = customMessages.getString("Utils.commandException");
         eventException = customMessages.getString("Utils.eventException");
@@ -39,6 +43,22 @@ public class MessageConfig {
 
     public void setClassAlreadyChosen(String classAlreadyChosen) {
         this.classAlreadyChosen = classAlreadyChosen;
+    }
+
+    public String getSkillChoice() {
+        return skillChoice;
+    }
+
+    public void setSkillChoice(String skillChoice) {
+        this.skillChoice = skillChoice;
+    }
+
+    public String getSkillCast() {
+        return skillCast;
+    }
+
+    public void setSkillCast(String skillCast) {
+        this.skillCast = skillCast;
     }
 
     public String getLoadingException() {
