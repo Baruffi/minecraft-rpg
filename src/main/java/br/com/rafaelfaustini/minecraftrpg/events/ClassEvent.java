@@ -14,20 +14,20 @@ import br.com.rafaelfaustini.minecraftrpg.config.model.GuiConfig;
 import br.com.rafaelfaustini.minecraftrpg.config.model.GuiItemConfig;
 import br.com.rafaelfaustini.minecraftrpg.config.model.MessageConfig;
 import br.com.rafaelfaustini.minecraftrpg.enums.ClassEnum;
-import br.com.rafaelfaustini.minecraftrpg.model.UserEntity;
-import br.com.rafaelfaustini.minecraftrpg.service.UserService;
+import br.com.rafaelfaustini.minecraftrpg.model.UserClassEntity;
+import br.com.rafaelfaustini.minecraftrpg.service.UserClassService;
 import br.com.rafaelfaustini.minecraftrpg.utils.TextUtil;
 
 public class ClassEvent implements Listener {
 
     private final MessageConfig messageConfig;
     private final GuiConfig guiClassConfig;
-    private final UserService userService;
+    private final UserClassService userClassService;
 
     public ClassEvent() {
         messageConfig = ConfigurationProvider.getMessageConfig();
         guiClassConfig = ConfigurationProvider.getClassGuiConfig();
-        userService = new UserService();
+        userClassService = new UserClassService();
     }
 
     @EventHandler
@@ -36,15 +36,19 @@ public class ClassEvent implements Listener {
 
         if (view.getTitle().equals(guiClassConfig.getGuiTitle())) {
             for (GuiItemConfig itemConfig : guiClassConfig.getGuiItems()) {
-                if (event.getCurrentItem().getType().equals(Material.getMaterial(itemConfig.getMaterial()))) {
+                ItemStack eventItem = event.getCurrentItem();
+
+                if (eventItem != null && eventItem.getType().equals(Material.getMaterial(itemConfig.getMaterial()))) {
                     Player player = (Player) event.getWhoClicked();
                     ClassEnum selectedClass = ClassEnum.fromString(itemConfig.getKey());
 
-                    registerOnUserDatabase(player, selectedClass);
-                    awardClassItems(player, selectedClass);
-                    sendConfirmationMessage(player, itemConfig);
-
-                    closeView(view);
+                    if (registerNewUserClass(player, selectedClass)) {
+                        awardClassItems(player, selectedClass);
+                        sendConfirmationMessage(player, itemConfig);
+                        closeView(view);
+                    } else {
+                        sendAlreadyChosenMessage(player, itemConfig);
+                    }
 
                     break;
                 }
@@ -54,13 +58,21 @@ public class ClassEvent implements Listener {
         }
     }
 
-    private void registerOnUserDatabase(Player player, ClassEnum selectedClass) {
+    private Boolean registerNewUserClass(Player player, ClassEnum selectedClass) {
         String playerUUID = player.getUniqueId().toString();
-        UserEntity userEntity = userService.get(playerUUID);
         Long classId = Long.valueOf(selectedClass.ordinal() + 1); // Could be better
 
-        userEntity.setClassId(classId); // Will need to change for multi-class support
-        userService.update(userEntity);
+        UserClassEntity userClassEntity = userClassService.get(playerUUID, classId);
+
+        if (userClassEntity == null) {
+            userClassEntity = new UserClassEntity(playerUUID, classId);
+
+            userClassService.insert(userClassEntity);
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void awardClassItems(Player player, ClassEnum selectedClass) {
@@ -94,6 +106,12 @@ public class ClassEvent implements Listener {
 
     private void sendConfirmationMessage(Player player, GuiItemConfig itemConfig) {
         String message = String.format(messageConfig.getClassChoice(), itemConfig.getDisplayName());
+
+        player.sendMessage(TextUtil.coloredText(message));
+    }
+
+    private void sendAlreadyChosenMessage(Player player, GuiItemConfig itemConfig) {
+        String message = String.format(messageConfig.getClassAlreadyChosen(), itemConfig.getDisplayName());
 
         player.sendMessage(TextUtil.coloredText(message));
     }

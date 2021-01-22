@@ -42,11 +42,11 @@ public class JoinEvent implements Listener {
         UserEntity userEntity = userService.get(playerUUID);
 
         if (userEntity == null) {
-            userEntity = new UserEntity(playerUUID, playerName, null);
+            userEntity = new UserEntity(playerUUID, playerName);
 
             userService.insert(userEntity);
         } else if (!userEntity.getLastAccountName().equals(playerName)) { // IF DISPLAYNAME CHANGED UPDATE
-            userEntity = new UserEntity(playerUUID, playerName, null);
+            userEntity = new UserEntity(playerUUID, playerName);
 
             userService.update(userEntity);
         }

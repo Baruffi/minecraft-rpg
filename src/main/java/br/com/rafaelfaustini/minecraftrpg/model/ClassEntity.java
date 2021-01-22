@@ -3,8 +3,13 @@ package br.com.rafaelfaustini.minecraftrpg.model;
 public class ClassEntity {
     private Long id;
     private String name;
+    private Long castItemId;
 
     public ClassEntity() {
+    }
+
+    public ClassEntity(String name) {
+        this.name = name;
     }
 
     public ClassEntity(Long id, String name) {
@@ -26,5 +31,13 @@ public class ClassEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getCastItemId() {
+        return castItemId;
+    }
+
+    public void setCastItemId(Long castItemId) {
+        this.castItemId = castItemId;
     }
 }

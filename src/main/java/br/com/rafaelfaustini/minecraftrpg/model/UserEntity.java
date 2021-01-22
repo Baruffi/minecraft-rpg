@@ -3,15 +3,13 @@ package br.com.rafaelfaustini.minecraftrpg.model;
 public class UserEntity {
     private String UUID;
     private String lastAccountName;
-    private Long classId;
 
     public UserEntity() {
     }
 
-    public UserEntity(String UUID, String lastAccountName, Long classId) {
+    public UserEntity(String UUID, String lastAccountName) {
         this.UUID = UUID;
         this.lastAccountName = lastAccountName;
-        this.classId = classId;
     }
 
     public String getUUID() {
@@ -28,13 +26,5 @@ public class UserEntity {
 
     public void setLastAccountName(String lastAccountName) {
         this.lastAccountName = lastAccountName;
-    }
-
-    public Long getClassId() {
-        return classId;
-    }
-
-    public void setClassId(Long classId) {
-        this.classId = classId;
     }
 }

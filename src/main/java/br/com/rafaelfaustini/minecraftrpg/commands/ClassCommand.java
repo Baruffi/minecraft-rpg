@@ -18,23 +18,25 @@ import br.com.rafaelfaustini.minecraftrpg.config.model.GuiConfig;
 import br.com.rafaelfaustini.minecraftrpg.config.model.GuiItemConfig;
 import br.com.rafaelfaustini.minecraftrpg.config.model.MessageConfig;
 import br.com.rafaelfaustini.minecraftrpg.model.ClassEntity;
-import br.com.rafaelfaustini.minecraftrpg.model.UserEntity;
+import br.com.rafaelfaustini.minecraftrpg.model.UserClassEntity;
 import br.com.rafaelfaustini.minecraftrpg.service.ClassService;
-import br.com.rafaelfaustini.minecraftrpg.service.UserService;
+import br.com.rafaelfaustini.minecraftrpg.service.UserClassService;
 import br.com.rafaelfaustini.minecraftrpg.utils.TextUtil;
 
 public class ClassCommand implements CommandExecutor {
 
+    private static final int MULTI_CLASS_LEVEL = 100;
+
     private final MessageConfig messageConfig;
     private final GuiConfig guiClassConfig;
-    private final UserService userService;
     private final ClassService classService;
+    private final UserClassService userClassService;
 
     public ClassCommand() {
         messageConfig = ConfigurationProvider.getMessageConfig();
         guiClassConfig = ConfigurationProvider.getClassGuiConfig();
-        userService = new UserService();
         classService = new ClassService();
+        userClassService = new UserClassService();
     }
 
     @Override
@@ -42,12 +44,19 @@ public class ClassCommand implements CommandExecutor {
         if (command.getName().equals("class")) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
-                Long classId = getClassId(player);
+                String playerUUID = player.getUniqueId().toString();
+                Integer playerLevel = player.getLevel();
 
-                if (classIdExists(classId)) {
-                    sendClassIdMessage(player, classId);
-                } else {
+                List<UserClassEntity> userClassEntities = userClassService.getAllByUser(playerUUID);
+
+                if (userClassEntities.isEmpty() || playerLevel > MULTI_CLASS_LEVEL) {
                     openClassChoiceInventory(player);
+                } else {
+                    for (UserClassEntity userClassEntity : userClassEntities) {
+                        Long classId = userClassEntity.getClassId();
+
+                        sendClassIdMessage(player, classId);
+                    }
                 }
             }
         }
@@ -85,17 +94,6 @@ public class ClassCommand implements CommandExecutor {
                 break;
             }
         }
-    }
-
-    private boolean classIdExists(Long classId) {
-        return classId != null && classId != 0;
-    }
-
-    private Long getClassId(Player player) {
-        String playerUUID = player.getUniqueId().toString();
-        UserEntity userEntity = userService.get(playerUUID);
-        Long classId = userEntity.getClassId();
-        return classId;
     }
 
     private ItemStack getSimpleItem(String displayName, String material, List<String> lore) {

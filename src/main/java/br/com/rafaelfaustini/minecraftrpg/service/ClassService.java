@@ -13,9 +13,11 @@ public class ClassService {
     public ClassEntity get(Long id) {
         SqliteConnection sql = new SqliteConnection();
         ClassEntity user = null;
+
         try {
             Connection con = sql.openConnection();
             ClassDAO classDAO = new ClassDAO(con);
+
             user = classDAO.get(id);
         } catch (Exception e) {
             LoggingUtil.error("Database Get ClassEntity", e);
@@ -26,15 +28,18 @@ public class ClassService {
             } catch (Exception e) {
             }
         }
+
         return user;
     }
 
     public List<ClassEntity> getAll() {
         SqliteConnection sql = new SqliteConnection();
         List<ClassEntity> users = null;
+
         try {
             Connection con = sql.openConnection();
             ClassDAO classDAO = new ClassDAO(con);
+
             users = classDAO.getAll();
         } catch (Exception e) {
             LoggingUtil.error("Database GetAll ClassEntity", e);
@@ -45,14 +50,17 @@ public class ClassService {
             } catch (Exception e) {
             }
         }
+
         return users;
     }
 
     public void insert(ClassEntity classEntity) {
         SqliteConnection sql = new SqliteConnection();
+
         try {
             Connection con = sql.openConnection();
             ClassDAO classDAO = new ClassDAO(con);
+
             classDAO.insert(classEntity);
         } catch (Exception e) {
             LoggingUtil.error("Database Insert ClassEntity", e);
@@ -67,9 +75,11 @@ public class ClassService {
 
     public void update(ClassEntity classEntity) {
         SqliteConnection sql = new SqliteConnection();
+
         try {
             Connection con = sql.openConnection();
             ClassDAO classDAO = new ClassDAO(con);
+
             classDAO.update(classEntity);
             classDAO = null;
         } catch (Exception e) {
@@ -85,9 +95,11 @@ public class ClassService {
 
     public void delete(Long id) {
         SqliteConnection sql = new SqliteConnection();
+
         try {
             Connection con = sql.openConnection();
             ClassDAO classDAO = new ClassDAO(con);
+
             classDAO.delete(id);
         } catch (Exception e) {
             LoggingUtil.error("Database Delete ClassEntity", e);

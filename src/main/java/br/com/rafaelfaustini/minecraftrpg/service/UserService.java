@@ -13,9 +13,11 @@ public class UserService {
     public UserEntity get(String uuid) {
         SqliteConnection sql = new SqliteConnection();
         UserEntity user = null;
+
         try {
             Connection con = sql.openConnection();
             UserDAO userDAO = new UserDAO(con);
+
             user = userDAO.get(uuid);
         } catch (Exception e) {
             LoggingUtil.error("Database Get UserEntity", e);
@@ -26,15 +28,18 @@ public class UserService {
             } catch (Exception e) {
             }
         }
+
         return user;
     }
 
     public List<UserEntity> getAll() {
         SqliteConnection sql = new SqliteConnection();
         List<UserEntity> users = null;
+
         try {
             Connection con = sql.openConnection();
             UserDAO userDAO = new UserDAO(con);
+
             users = userDAO.getAll();
         } catch (Exception e) {
             LoggingUtil.error("Database GetAll UserEntity", e);
@@ -45,14 +50,17 @@ public class UserService {
             } catch (Exception e) {
             }
         }
+
         return users;
     }
 
     public void insert(UserEntity userEntity) {
         SqliteConnection sql = new SqliteConnection();
+
         try {
             Connection con = sql.openConnection();
             UserDAO userDAO = new UserDAO(con);
+
             userDAO.insert(userEntity);
         } catch (Exception e) {
             LoggingUtil.error("Database Insert UserEntity", e);
@@ -67,9 +75,11 @@ public class UserService {
 
     public void update(UserEntity userEntity) {
         SqliteConnection sql = new SqliteConnection();
+
         try {
             Connection con = sql.openConnection();
             UserDAO userDAO = new UserDAO(con);
+
             userDAO.update(userEntity);
             userDAO = null;
         } catch (Exception e) {
@@ -85,9 +95,11 @@ public class UserService {
 
     public void delete(String uuid) {
         SqliteConnection sql = new SqliteConnection();
+
         try {
             Connection con = sql.openConnection();
             UserDAO userDAO = new UserDAO(con);
+
             userDAO.delete(uuid);
         } catch (Exception e) {
             LoggingUtil.error("Database Delete UserEntity", e);

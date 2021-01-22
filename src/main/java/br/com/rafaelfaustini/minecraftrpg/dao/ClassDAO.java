@@ -9,47 +9,44 @@ import java.util.List;
 import br.com.rafaelfaustini.minecraftrpg.enums.ClassEnum;
 import br.com.rafaelfaustini.minecraftrpg.interfaces.IDao;
 import br.com.rafaelfaustini.minecraftrpg.model.ClassEntity;
-import br.com.rafaelfaustini.minecraftrpg.utils.LoggingUtil;
 
 public class ClassDAO implements IDao<Long, ClassEntity> { // <Type of id, entity>
 
     private final Connection connection;
 
-    private void createTable() {
-        try {
-            String sql = "CREATE TABLE IF NOT EXISTS CLASSES ( ID INTEGER PRIMARY KEY, NAME TEXT )";
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.execute();
-        } catch (Exception e) {
-            LoggingUtil.error("Database Creating ClassEntity", e);
-        }
-    }
-
-    private void fillTable() {
-        try {
-            String sql = "INSERT OR REPLACE INTO CLASSES (NAME) VALUES ( ? )";
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, ClassEnum.WARRIOR.getClassName());
-            ps.execute();
-            ps.setString(1, ClassEnum.MAGE.getClassName());
-            ps.execute();
-            ps.setString(1, ClassEnum.ROGUE.getClassName());
-            ps.execute();
-            ps.setString(1, ClassEnum.DRUID.getClassName());
-            ps.execute();
-            ps.setString(1, ClassEnum.ALCHEMIST.getClassName());
-            ps.execute();
-            ps.setString(1, ClassEnum.BARD.getClassName());
-            ps.execute();
-        } catch (Exception e) {
-            LoggingUtil.error("Database Filling ClassEntity", e);
-        }
-    }
-
     public ClassDAO(Connection con) {
         connection = con;
-        createTable();
-        fillTable();
+    }
+
+    @Override
+    public void createTable() throws Exception {
+        String sql = "CREATE TABLE IF NOT EXISTS CLASSES ( ID INTEGER PRIMARY KEY, NAME TEXT )";
+        PreparedStatement ps = connection.prepareStatement(sql);
+
+        ps.execute();
+    }
+
+    public void fillTable() throws Exception { // Could be better
+        String sql = "INSERT OR REPLACE INTO CLASSES (NAME) VALUES ( ? )";
+        PreparedStatement ps = connection.prepareStatement(sql);
+
+        ps.setString(1, ClassEnum.WARRIOR.getClassName());
+        ps.execute();
+
+        ps.setString(1, ClassEnum.MAGE.getClassName());
+        ps.execute();
+
+        ps.setString(1, ClassEnum.ROGUE.getClassName());
+        ps.execute();
+
+        ps.setString(1, ClassEnum.DRUID.getClassName());
+        ps.execute();
+
+        ps.setString(1, ClassEnum.ALCHEMIST.getClassName());
+        ps.execute();
+
+        ps.setString(1, ClassEnum.BARD.getClassName());
+        ps.execute();
     }
 
     @Override
@@ -58,11 +55,13 @@ public class ClassDAO implements IDao<Long, ClassEntity> { // <Type of id, entit
         ClassEntity classEntity = null;
         String sql = "SELECT NAME FROM CLASSES WHERE ID=?";
         PreparedStatement ps = connection.prepareStatement(sql);
+
         ps.setLong(1, id);
         rs = ps.executeQuery();
 
         if (rs.next()) {
             String name = rs.getString(1);
+
             classEntity = new ClassEntity(id, name);
         }
 
@@ -74,11 +73,13 @@ public class ClassDAO implements IDao<Long, ClassEntity> { // <Type of id, entit
         ClassEntity classEntity = null;
         String sql = "SELECT ID FROM CLASSES WHERE NAME=?";
         PreparedStatement ps = connection.prepareStatement(sql);
+
         ps.setString(1, name);
         rs = ps.executeQuery();
 
         if (rs.next()) {
             Long id = rs.getLong(1);
+
             classEntity = new ClassEntity(id, name);
         }
 
@@ -91,12 +92,14 @@ public class ClassDAO implements IDao<Long, ClassEntity> { // <Type of id, entit
         List<ClassEntity> classes = new ArrayList<>();
         String sql = "SELECT ID, NAME FROM CLASSES";
         PreparedStatement ps = connection.prepareStatement(sql);
+
         rs = ps.executeQuery();
 
         while (rs.next()) {
             Long id = rs.getLong(1);
             String name = rs.getString(2);
             ClassEntity classEntity = new ClassEntity(id, name);
+
             classes.add(classEntity);
         }
 
@@ -107,6 +110,7 @@ public class ClassDAO implements IDao<Long, ClassEntity> { // <Type of id, entit
     public void insert(ClassEntity ClassEntity) throws Exception {
         String sql = "INSERT INTO CLASSES (NAME) VALUES ( ? )";
         PreparedStatement ps = connection.prepareStatement(sql);
+
         ps.setString(1, ClassEntity.getName());
         ps.execute();
     }
@@ -115,6 +119,7 @@ public class ClassDAO implements IDao<Long, ClassEntity> { // <Type of id, entit
     public void update(ClassEntity ClassEntity) throws Exception {
         String sql = "UPDATE CLASSES SET NAME=? WHERE ID=?";
         PreparedStatement ps = connection.prepareStatement(sql);
+
         ps.setString(1, ClassEntity.getName());
         ps.setLong(2, ClassEntity.getId());
         ps.execute();
@@ -124,6 +129,7 @@ public class ClassDAO implements IDao<Long, ClassEntity> { // <Type of id, entit
     public void delete(Long id) throws Exception {
         String sql = "DELETE CLASSES WHERE ID=?";
         PreparedStatement ps = connection.prepareStatement(sql);
+
         ps.setLong(1, id);
         ps.execute();
     }
