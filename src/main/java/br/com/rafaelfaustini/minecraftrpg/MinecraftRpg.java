@@ -1,7 +1,5 @@
 package br.com.rafaelfaustini.minecraftrpg;
 
-import java.sql.Connection;
-
 import org.bukkit.Server;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -9,12 +7,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import br.com.rafaelfaustini.minecraftrpg.commands.ClassCommand;
 import br.com.rafaelfaustini.minecraftrpg.config.ConfigurationProvider;
 import br.com.rafaelfaustini.minecraftrpg.config.CustomConfig;
-import br.com.rafaelfaustini.minecraftrpg.dao.UserDAO;
-import br.com.rafaelfaustini.minecraftrpg.dao.SqliteConnection;
 import br.com.rafaelfaustini.minecraftrpg.events.ClassEvent;
 import br.com.rafaelfaustini.minecraftrpg.events.JoinEvent;
-import br.com.rafaelfaustini.minecraftrpg.service.UserService;
-import br.com.rafaelfaustini.minecraftrpg.utils.LoggingUtil;
 
 public class MinecraftRpg extends JavaPlugin {
 
@@ -41,5 +35,4 @@ public class MinecraftRpg extends JavaPlugin {
     private void registerCommands() {
         getCommand("class").setExecutor(new ClassCommand());
     }
-
 }

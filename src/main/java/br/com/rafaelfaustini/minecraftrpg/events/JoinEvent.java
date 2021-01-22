@@ -15,9 +15,11 @@ import br.com.rafaelfaustini.minecraftrpg.utils.TextUtil;
 
 public class JoinEvent implements Listener {
     private final MessageConfig messageConfig;
+    private final UserService userService;
 
     public JoinEvent() {
         messageConfig = ConfigurationProvider.getMessageConfig();
+        userService = new UserService();
     }
 
     @EventHandler
@@ -37,15 +39,16 @@ public class JoinEvent implements Listener {
         String playerUUID = player.getUniqueId().toString();
         String playerName = player.getName();
 
-        UserService userService = new UserService();
-        UserEntity user = userService.get(playerUUID);
+        UserEntity userEntity = userService.get(playerUUID);
 
-        if(user == null){
-            user = new UserEntity(playerUUID, playerName);
-            userService.insert(user);
-        } else if(!user.getLastAccountName().equalsIgnoreCase(playerName)){ // IF DISPLAYNAME CHANGED IF UPDATE
-            user = new UserEntity(playerUUID, playerName);
-            userService.update(user); 
+        if (userEntity == null) {
+            userEntity = new UserEntity(playerUUID, playerName, null);
+
+            userService.insert(userEntity);
+        } else if (!userEntity.getLastAccountName().equalsIgnoreCase(playerName)) { // IF DISPLAYNAME CHANGED UPDATE
+            userEntity = new UserEntity(playerUUID, playerName, null);
+
+            userService.update(userEntity);
         }
     }
 }

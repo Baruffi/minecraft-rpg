@@ -16,13 +16,25 @@ import org.bukkit.inventory.meta.ItemMeta;
 import br.com.rafaelfaustini.minecraftrpg.config.ConfigurationProvider;
 import br.com.rafaelfaustini.minecraftrpg.config.model.GuiConfig;
 import br.com.rafaelfaustini.minecraftrpg.config.model.GuiItemConfig;
+import br.com.rafaelfaustini.minecraftrpg.config.model.MessageConfig;
+import br.com.rafaelfaustini.minecraftrpg.model.ClassEntity;
+import br.com.rafaelfaustini.minecraftrpg.model.UserEntity;
+import br.com.rafaelfaustini.minecraftrpg.service.ClassService;
+import br.com.rafaelfaustini.minecraftrpg.service.UserService;
 import br.com.rafaelfaustini.minecraftrpg.utils.TextUtil;
 
 public class ClassCommand implements CommandExecutor {
+
+    private final MessageConfig messageConfig;
     private final GuiConfig guiClassConfig;
+    private final UserService userService;
+    private final ClassService classService;
 
     public ClassCommand() {
+        messageConfig = ConfigurationProvider.getMessageConfig();
         guiClassConfig = ConfigurationProvider.getClassGuiConfig();
+        userService = new UserService();
+        classService = new ClassService();
     }
 
     @Override
@@ -30,25 +42,52 @@ public class ClassCommand implements CommandExecutor {
         if (command.getName().equals("class")) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
+                Long classId = getClassId(player);
 
-                Inventory gui = Bukkit.createInventory(player, 9, guiClassConfig.getGuiTitle());
-
-                List<GuiItemConfig> guiItems = guiClassConfig.getGuiItems();
-                List<ItemStack> items = new ArrayList<>();
-
-                for (GuiItemConfig guiItem : guiItems) {
-                    ItemStack item = getSimpleItem(guiItem.getDisplayName(), guiItem.getMaterial(), guiItem.getLore());
-
-                    items.add(item);
+                if (classIdExists(classId)) {
+                    sendClassIdMessage(player, classId);
+                } else {
+                    openClassChoiceInventory(player);
                 }
-
-                gui.setContents(items.toArray(new ItemStack[0]));
-
-                player.openInventory(gui);
             }
         }
 
         return true;
+    }
+
+    private void openClassChoiceInventory(Player player) {
+        Inventory gui = Bukkit.createInventory(player, 9, guiClassConfig.getGuiTitle());
+
+        List<GuiItemConfig> guiItems = guiClassConfig.getGuiItems();
+        List<ItemStack> items = new ArrayList<>();
+
+        for (GuiItemConfig guiItem : guiItems) {
+            ItemStack item = getSimpleItem(guiItem.getDisplayName(), guiItem.getMaterial(), guiItem.getLore());
+
+            items.add(item);
+        }
+
+        gui.setContents(items.toArray(new ItemStack[0]));
+
+        player.openInventory(gui);
+    }
+
+    private void sendClassIdMessage(Player player, Long classId) {
+        ClassEntity classEntity = classService.get(classId);
+        String message = String.format(messageConfig.getClassAlreadyChosen(), classEntity.getName());
+
+        player.sendMessage(TextUtil.coloredText(message));
+    }
+
+    private boolean classIdExists(Long classId) {
+        return classId != null && classId != 0;
+    }
+
+    private Long getClassId(Player player) {
+        String playerUUID = player.getUniqueId().toString();
+        UserEntity userEntity = userService.get(playerUUID);
+        Long classId = userEntity.getClassId();
+        return classId;
     }
 
     private ItemStack getSimpleItem(String displayName, String material, List<String> lore) {

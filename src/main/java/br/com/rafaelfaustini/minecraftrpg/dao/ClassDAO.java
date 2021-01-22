@@ -1,0 +1,129 @@
+package br.com.rafaelfaustini.minecraftrpg.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import br.com.rafaelfaustini.minecraftrpg.interfaces.IDao;
+import br.com.rafaelfaustini.minecraftrpg.model.ClassEntity;
+import br.com.rafaelfaustini.minecraftrpg.utils.LoggingUtil;
+
+public class ClassDAO implements IDao<Long, ClassEntity> { // <Type of id, entity>
+
+    private final Connection connection;
+
+    private void createTable() {
+        try {
+            String sql = "CREATE TABLE IF NOT EXISTS CLASSES ( ID INTEGER PRIMARY KEY, NAME TEXT )";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.execute();
+        } catch (Exception e) {
+            LoggingUtil.error("Database Creating ClassEntity", e);
+        }
+    }
+
+    private void fillTable() {
+        try {
+            String sql = "INSERT OR REPLACE INTO CLASSES (NAME) VALUES ( ? )";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, "Warrior");
+            ps.execute();
+            ps.setString(1, "Mage");
+            ps.execute();
+            ps.setString(1, "Rogue");
+            ps.execute();
+            ps.setString(1, "Druid");
+            ps.execute();
+            ps.setString(1, "Alchemist");
+            ps.execute();
+            ps.setString(1, "Bard");
+            ps.execute();
+        } catch (Exception e) {
+            LoggingUtil.error("Database Filling ClassEntity", e);
+        }
+    }
+
+    public ClassDAO(Connection con) {
+        connection = con;
+        createTable();
+        fillTable();
+    }
+
+    @Override
+    public ClassEntity get(Long id) throws Exception {
+        ResultSet rs = null;
+        ClassEntity classEntity = null;
+        String sql = "SELECT NAME FROM CLASSES WHERE ID=?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setLong(1, id);
+        rs = ps.executeQuery();
+
+        if (rs.next()) {
+            String name = rs.getString(1);
+            classEntity = new ClassEntity(id, name);
+        }
+
+        return classEntity;
+    }
+
+    public ClassEntity getFirstByName(String name) throws Exception {
+        ResultSet rs = null;
+        ClassEntity classEntity = null;
+        String sql = "SELECT ID FROM CLASSES WHERE NAME=?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, name);
+        rs = ps.executeQuery();
+
+        if (rs.next()) {
+            Long id = rs.getLong(1);
+            classEntity = new ClassEntity(id, name);
+        }
+
+        return classEntity;
+    }
+
+    @Override
+    public List<ClassEntity> getAll() throws Exception {
+        ResultSet rs = null;
+        List<ClassEntity> classes = new ArrayList<>();
+        String sql = "SELECT ID, NAME FROM CLASSES";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Long id = rs.getLong(1);
+            String name = rs.getString(2);
+            ClassEntity classEntity = new ClassEntity(id, name);
+            classes.add(classEntity);
+        }
+
+        return classes;
+    }
+
+    @Override
+    public void insert(ClassEntity ClassEntity) throws Exception {
+        String sql = "INSERT INTO CLASSES (NAME) VALUES ( ? )";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, ClassEntity.getName());
+        ps.execute();
+    }
+
+    @Override
+    public void update(ClassEntity ClassEntity) throws Exception {
+        String sql = "UPDATE CLASSES SET NAME=? WHERE ID=?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, ClassEntity.getName());
+        ps.setLong(2, ClassEntity.getId());
+        ps.execute();
+    }
+
+    @Override
+    public void delete(Long id) throws Exception {
+        String sql = "DELETE CLASSES WHERE ID=?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setLong(1, id);
+        ps.execute();
+    }
+}

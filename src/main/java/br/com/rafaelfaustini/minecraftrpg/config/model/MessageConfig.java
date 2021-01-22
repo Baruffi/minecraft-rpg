@@ -5,6 +5,7 @@ import br.com.rafaelfaustini.minecraftrpg.config.CustomConfig;
 public class MessageConfig {
     private String welcome;
     private String classChoice;
+    private String classAlreadyChosen;
     private String loadingException;
     private String commandException;
     private String eventException;
@@ -12,6 +13,7 @@ public class MessageConfig {
     public MessageConfig(CustomConfig customMessages) {
         welcome = customMessages.getString("Events.welcome");
         classChoice = customMessages.getString("Events.classChoice");
+        classAlreadyChosen = customMessages.getString("Commands.classAlreadyChosen");
         loadingException = customMessages.getString("Utils.loadingException");
         commandException = customMessages.getString("Utils.commandException");
         eventException = customMessages.getString("Utils.eventException");
@@ -31,6 +33,14 @@ public class MessageConfig {
 
     public void setClassChoice(String classChoice) {
         this.classChoice = classChoice;
+    }
+
+    public String getClassAlreadyChosen() {
+        return classAlreadyChosen;
+    }
+
+    public void setClassAlreadyChosen(String classAlreadyChosen) {
+        this.classAlreadyChosen = classAlreadyChosen;
     }
 
     public String getLoadingException() {

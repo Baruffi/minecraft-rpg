@@ -3,22 +3,22 @@ package br.com.rafaelfaustini.minecraftrpg.service;
 import java.sql.Connection;
 import java.util.List;
 
+import br.com.rafaelfaustini.minecraftrpg.dao.ClassDAO;
 import br.com.rafaelfaustini.minecraftrpg.dao.SqliteConnection;
-import br.com.rafaelfaustini.minecraftrpg.dao.UserDAO;
-import br.com.rafaelfaustini.minecraftrpg.model.UserEntity;
+import br.com.rafaelfaustini.minecraftrpg.model.ClassEntity;
 import br.com.rafaelfaustini.minecraftrpg.utils.LoggingUtil;
 
-public class UserService {
+public class ClassService {
 
-    public UserEntity get(String uuid) {
+    public ClassEntity get(Long id) {
         SqliteConnection sql = new SqliteConnection();
-        UserEntity user = null;
+        ClassEntity user = null;
         try {
             Connection con = sql.openConnection();
-            UserDAO userDAO = new UserDAO(con);
-            user = userDAO.get(uuid);
+            ClassDAO classDAO = new ClassDAO(con);
+            user = classDAO.get(id);
         } catch (Exception e) {
-            LoggingUtil.error("Database Get UserEntity", e);
+            LoggingUtil.error("Database Get ClassEntity", e);
         } finally {
             try {
                 sql.close();
@@ -29,15 +29,15 @@ public class UserService {
         return user;
     }
 
-    public List<UserEntity> getAll() {
+    public List<ClassEntity> getAll() {
         SqliteConnection sql = new SqliteConnection();
-        List<UserEntity> users = null;
+        List<ClassEntity> users = null;
         try {
             Connection con = sql.openConnection();
-            UserDAO userDAO = new UserDAO(con);
-            users = userDAO.getAll();
+            ClassDAO classDAO = new ClassDAO(con);
+            users = classDAO.getAll();
         } catch (Exception e) {
-            LoggingUtil.error("Database GetAll UserEntity", e);
+            LoggingUtil.error("Database GetAll ClassEntity", e);
         } finally {
             try {
                 sql.close();
@@ -48,14 +48,14 @@ public class UserService {
         return users;
     }
 
-    public void insert(UserEntity userEntity) {
+    public void insert(ClassEntity classEntity) {
         SqliteConnection sql = new SqliteConnection();
         try {
             Connection con = sql.openConnection();
-            UserDAO userDAO = new UserDAO(con);
-            userDAO.insert(userEntity);
+            ClassDAO classDAO = new ClassDAO(con);
+            classDAO.insert(classEntity);
         } catch (Exception e) {
-            LoggingUtil.error("Database Insert UserEntity", e);
+            LoggingUtil.error("Database Insert ClassEntity", e);
         } finally {
             try {
                 sql.close();
@@ -65,15 +65,15 @@ public class UserService {
         }
     }
 
-    public void update(UserEntity userEntity) {
+    public void update(ClassEntity classEntity) {
         SqliteConnection sql = new SqliteConnection();
         try {
             Connection con = sql.openConnection();
-            UserDAO userDAO = new UserDAO(con);
-            userDAO.update(userEntity);
-            userDAO = null;
+            ClassDAO classDAO = new ClassDAO(con);
+            classDAO.update(classEntity);
+            classDAO = null;
         } catch (Exception e) {
-            LoggingUtil.error("Database Update UserEntity", e);
+            LoggingUtil.error("Database Update ClassEntity", e);
         } finally {
             try {
                 sql.close();
@@ -83,14 +83,14 @@ public class UserService {
         }
     }
 
-    public void delete(String uuid) {
+    public void delete(Long id) {
         SqliteConnection sql = new SqliteConnection();
         try {
             Connection con = sql.openConnection();
-            UserDAO userDAO = new UserDAO(con);
-            userDAO.delete(uuid);
+            ClassDAO classDAO = new ClassDAO(con);
+            classDAO.delete(id);
         } catch (Exception e) {
-            LoggingUtil.error("Database Delete UserEntity", e);
+            LoggingUtil.error("Database Delete ClassEntity", e);
         } finally {
             try {
                 sql.close();

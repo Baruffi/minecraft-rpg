@@ -2,7 +2,7 @@ package br.com.rafaelfaustini.minecraftrpg.interfaces;
 
 import java.util.List;
 
-public interface IDao<I,T> { //<Type of id, entity>
+public interface IDao<I, T> { // <Type of id, entity>
 
     T get(I id) throws Exception;
 

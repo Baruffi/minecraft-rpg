@@ -14,16 +14,20 @@ import br.com.rafaelfaustini.minecraftrpg.config.model.GuiConfig;
 import br.com.rafaelfaustini.minecraftrpg.config.model.GuiItemConfig;
 import br.com.rafaelfaustini.minecraftrpg.config.model.MessageConfig;
 import br.com.rafaelfaustini.minecraftrpg.enums.ClassEnum;
+import br.com.rafaelfaustini.minecraftrpg.model.UserEntity;
+import br.com.rafaelfaustini.minecraftrpg.service.UserService;
 import br.com.rafaelfaustini.minecraftrpg.utils.TextUtil;
 
 public class ClassEvent implements Listener {
 
     private final MessageConfig messageConfig;
     private final GuiConfig guiClassConfig;
+    private final UserService userService;
 
     public ClassEvent() {
         messageConfig = ConfigurationProvider.getMessageConfig();
         guiClassConfig = ConfigurationProvider.getClassGuiConfig();
+        userService = new UserService();
     }
 
     @EventHandler
@@ -36,8 +40,7 @@ public class ClassEvent implements Listener {
                     Player player = (Player) event.getWhoClicked();
                     ClassEnum selectedClass = ClassEnum.fromString(itemConfig.getKey());
 
-                    // TODO: register the player class in the database
-
+                    registerOnUserDatabase(player, selectedClass);
                     awardClassItems(player, selectedClass);
                     sendConfirmationMessage(player, itemConfig);
 
@@ -47,6 +50,15 @@ public class ClassEvent implements Listener {
 
             cancelEvent(event);
         }
+    }
+
+    private void registerOnUserDatabase(Player player, ClassEnum selectedClass) {
+        String playerUUID = player.getUniqueId().toString();
+        UserEntity userEntity = userService.get(playerUUID);
+        Long classId = Long.valueOf(selectedClass.ordinal() + 1);
+
+        userEntity.setClassId(classId); // Will need to change for multi-class support
+        userService.update(userEntity);
     }
 
     private void awardClassItems(Player player, ClassEnum selectedClass) {

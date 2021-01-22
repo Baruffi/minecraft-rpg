@@ -30,8 +30,7 @@ public class SqliteConnection {
         }
     }
 
-	public Connection getCon() {
-		return con;
-	}
-
+    public Connection getCon() {
+        return con;
+    }
 }
