@@ -34,7 +34,7 @@ public class ClassEvent implements Listener {
     public void onClick(InventoryClickEvent event) {
         InventoryView view = event.getView();
 
-        if (view.getTitle().equalsIgnoreCase(guiClassConfig.getGuiTitle())) {
+        if (view.getTitle().equals(guiClassConfig.getGuiTitle())) {
             for (GuiItemConfig itemConfig : guiClassConfig.getGuiItems()) {
                 if (event.getCurrentItem().getType().equals(Material.getMaterial(itemConfig.getMaterial()))) {
                     Player player = (Player) event.getWhoClicked();
@@ -45,6 +45,8 @@ public class ClassEvent implements Listener {
                     sendConfirmationMessage(player, itemConfig);
 
                     closeView(view);
+
+                    break;
                 }
             }
 
@@ -55,7 +57,7 @@ public class ClassEvent implements Listener {
     private void registerOnUserDatabase(Player player, ClassEnum selectedClass) {
         String playerUUID = player.getUniqueId().toString();
         UserEntity userEntity = userService.get(playerUUID);
-        Long classId = Long.valueOf(selectedClass.ordinal() + 1);
+        Long classId = Long.valueOf(selectedClass.ordinal() + 1); // Could be better
 
         userEntity.setClassId(classId); // Will need to change for multi-class support
         userService.update(userEntity);

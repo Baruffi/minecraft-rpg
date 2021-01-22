@@ -74,9 +74,17 @@ public class ClassCommand implements CommandExecutor {
 
     private void sendClassIdMessage(Player player, Long classId) {
         ClassEntity classEntity = classService.get(classId);
-        String message = String.format(messageConfig.getClassAlreadyChosen(), classEntity.getName());
 
-        player.sendMessage(TextUtil.coloredText(message));
+        List<GuiItemConfig> guiItems = guiClassConfig.getGuiItems();
+        for (GuiItemConfig guiItem : guiItems) {
+            if (guiItem.getKey().equals(classEntity.getName())) {
+                String message = String.format(messageConfig.getClassAlreadyChosen(), guiItem.getDisplayName());
+
+                player.sendMessage(TextUtil.coloredText(message));
+
+                break;
+            }
+        }
     }
 
     private boolean classIdExists(Long classId) {

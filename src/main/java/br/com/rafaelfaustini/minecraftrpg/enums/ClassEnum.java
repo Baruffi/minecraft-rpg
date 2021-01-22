@@ -15,7 +15,7 @@ public enum ClassEnum {
 
     public static ClassEnum fromString(String className) {
         for (ClassEnum classEnum : ClassEnum.values()) {
-            if (classEnum.className.equalsIgnoreCase(className)) {
+            if (classEnum.className.equals(className)) {
                 return classEnum;
             }
         }

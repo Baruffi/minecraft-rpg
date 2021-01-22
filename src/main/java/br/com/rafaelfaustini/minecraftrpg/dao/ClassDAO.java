@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.rafaelfaustini.minecraftrpg.enums.ClassEnum;
 import br.com.rafaelfaustini.minecraftrpg.interfaces.IDao;
 import br.com.rafaelfaustini.minecraftrpg.model.ClassEntity;
 import br.com.rafaelfaustini.minecraftrpg.utils.LoggingUtil;
@@ -28,17 +29,17 @@ public class ClassDAO implements IDao<Long, ClassEntity> { // <Type of id, entit
         try {
             String sql = "INSERT OR REPLACE INTO CLASSES (NAME) VALUES ( ? )";
             PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, "Warrior");
+            ps.setString(1, ClassEnum.WARRIOR.getClassName());
             ps.execute();
-            ps.setString(1, "Mage");
+            ps.setString(1, ClassEnum.MAGE.getClassName());
             ps.execute();
-            ps.setString(1, "Rogue");
+            ps.setString(1, ClassEnum.ROGUE.getClassName());
             ps.execute();
-            ps.setString(1, "Druid");
+            ps.setString(1, ClassEnum.DRUID.getClassName());
             ps.execute();
-            ps.setString(1, "Alchemist");
+            ps.setString(1, ClassEnum.ALCHEMIST.getClassName());
             ps.execute();
-            ps.setString(1, "Bard");
+            ps.setString(1, ClassEnum.BARD.getClassName());
             ps.execute();
         } catch (Exception e) {
             LoggingUtil.error("Database Filling ClassEntity", e);
