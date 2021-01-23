@@ -1,8 +1,5 @@
 package br.com.rafaelfaustini.minecraftrpg.config;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import br.com.rafaelfaustini.minecraftrpg.service.InitService;
 
 public class ConfigurationProvider {
