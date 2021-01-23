@@ -21,7 +21,7 @@ public class ClassSkillDAO implements IDao<Long, ClassSkillEntity> { // <Type of
 
     @Override
     public void createTable() throws Exception {
-        String sql = "CREATE TABLE IF NOT EXISTS CLASSES_SKILLS ( ID INTEGER PRIMARY KEY, CLASS_ID TEXT, SKILL_ID INTEGER, FOREIGN KEY(CLASS_ID) REFERENCES CLASSES(Id), FOREIGN KEY(SKILL_ID) REFERENCES SKILLS(Id), UNIQUE (CLASS_ID, SKILL_ID) )";
+        String sql = "CREATE TABLE IF NOT EXISTS CLASSES_SKILLS ( ID INTEGER PRIMARY KEY, CLASS_ID TEXT, SKILL_ID INTEGER, FOREIGN KEY(CLASS_ID) REFERENCES CLASSES(ID), FOREIGN KEY(SKILL_ID) REFERENCES SKILLS(ID), UNIQUE (CLASS_ID, SKILL_ID) )";
         PreparedStatement ps = connection.prepareStatement(sql);
 
         ps.execute();

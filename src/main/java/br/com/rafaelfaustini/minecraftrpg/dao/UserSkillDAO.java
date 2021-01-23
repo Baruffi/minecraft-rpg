@@ -8,6 +8,7 @@ import java.util.List;
 
 import br.com.rafaelfaustini.minecraftrpg.interfaces.IDao;
 import br.com.rafaelfaustini.minecraftrpg.model.UserSkillEntity;
+import br.com.rafaelfaustini.minecraftrpg.utils.LoggingUtil;
 
 public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of id, entity>
 
@@ -19,7 +20,7 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
 
     @Override
     public void createTable() throws Exception {
-        String sql = "CREATE TABLE IF NOT EXISTS USERS_SKILLS ( ID INTEGER PRIMARY KEY, USER_UUID TEXT, SKILL_ID INTEGER, FOREIGN KEY(USER_UUID) REFERENCES USERS(UUID), FOREIGN KEY(SKILL_ID) REFERENCES SKILLS(ID), UNIQUE (USER_UUID, SKILL_ID) )";
+        String sql = "CREATE TABLE IF NOT EXISTS USERS_SKILLS ( ID INTEGER PRIMARY KEY, USER_UUID TEXT, SKILL_ID INTEGER, STATUS INTEGER, FOREIGN KEY(USER_UUID) REFERENCES USERS(UUID), FOREIGN KEY(SKILL_ID) REFERENCES SKILLS(ID), UNIQUE (USER_UUID, SKILL_ID) )";
         PreparedStatement ps = connection.prepareStatement(sql);
 
         ps.execute();
@@ -127,25 +128,32 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
     }
 
     @Override
-    public void insert(UserSkillEntity UserSkillEntity) throws Exception {
+    public void insert(UserSkillEntity userSkillEntity) throws Exception {
         String sql = "INSERT INTO USERS_SKILLS (USER_UUID, SKILL_ID) VALUES ( ?, ? )";
         PreparedStatement ps = connection.prepareStatement(sql);
 
-        ps.setString(1, UserSkillEntity.getUserUUID());
-        ps.setLong(2, UserSkillEntity.getSkillId());
+        ps.setString(1, userSkillEntity.getUserUUID());
+        ps.setLong(2, userSkillEntity.getSkillId());
         ps.execute();
     }
 
     @Override
-    public void update(UserSkillEntity UserSkillEntity) throws Exception {
+    public void update(UserSkillEntity userSkillEntity) throws Exception {
         String sql = "UPDATE USERS_SKILLS SET USER_UUID=?, SKILL_ID=?, STATUS=? WHERE ID=?";
         PreparedStatement ps = connection.prepareStatement(sql);
 
-        ps.setString(1, UserSkillEntity.getUserUUID());
-        ps.setLong(2, UserSkillEntity.getSkillId());
-        ps.setInt(3, UserSkillEntity.getStatus());
-        ps.setLong(4, UserSkillEntity.getId());
-        ps.execute();
+        ps.setString(1, userSkillEntity.getUserUUID());
+        ps.setLong(2, userSkillEntity.getSkillId());
+        ps.setInt(3, userSkillEntity.getStatus());
+        ps.setLong(4, userSkillEntity.getId());
+
+        // TODO: UPDATE STATEMENT NOT WORKING. REMOVE LOGGING WHEN WORKING
+
+        LoggingUtil.info(ps.toString());
+
+        Integer returnInt = ps.executeUpdate();
+
+        LoggingUtil.info(returnInt.toString());
     }
 
     @Override

@@ -1,5 +1,7 @@
 package br.com.rafaelfaustini.minecraftrpg.events;
 
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -15,8 +17,12 @@ import br.com.rafaelfaustini.minecraftrpg.config.GuiConfig;
 import br.com.rafaelfaustini.minecraftrpg.config.GuiItemConfig;
 import br.com.rafaelfaustini.minecraftrpg.config.MessageConfig;
 import br.com.rafaelfaustini.minecraftrpg.enums.ClassEnum;
+import br.com.rafaelfaustini.minecraftrpg.model.ClassSkillEntity;
 import br.com.rafaelfaustini.minecraftrpg.model.UserClassEntity;
+import br.com.rafaelfaustini.minecraftrpg.model.UserSkillEntity;
+import br.com.rafaelfaustini.minecraftrpg.service.ClassSkillService;
 import br.com.rafaelfaustini.minecraftrpg.service.UserClassService;
+import br.com.rafaelfaustini.minecraftrpg.service.UserSkillService;
 import br.com.rafaelfaustini.minecraftrpg.utils.TextUtil;
 
 public class ClassEvent implements Listener {
@@ -24,11 +30,15 @@ public class ClassEvent implements Listener {
     private final MessageConfig messageConfig;
     private final GuiConfig guiClassConfig;
     private final UserClassService userClassService;
+    private final ClassSkillService classSkillService;
+    private final UserSkillService userSkillService;
 
     public ClassEvent() {
         messageConfig = ConfigurationProvider.getMessageConfig();
         guiClassConfig = ConfigurationProvider.getClassGuiConfig();
         userClassService = new UserClassService();
+        classSkillService = new ClassSkillService();
+        userSkillService = new UserSkillService();
     }
 
     @EventHandler
@@ -36,19 +46,21 @@ public class ClassEvent implements Listener {
         InventoryView view = event.getView();
 
         if (view.getTitle().equals(guiClassConfig.getGuiTitle())) {
-            for (GuiItemConfig itemConfig : guiClassConfig.getGuiItems()) {
+            List<GuiItemConfig> guiItems = guiClassConfig.getGuiItems();
+
+            for (GuiItemConfig guiItem : guiItems) {
                 ItemStack eventItem = event.getCurrentItem();
 
-                if (eventItem != null && eventItem.getType().equals(Material.getMaterial(itemConfig.getMaterial()))) {
+                if (eventItem != null && eventItem.getType().equals(Material.getMaterial(guiItem.getMaterial()))) {
                     Player player = (Player) event.getWhoClicked();
-                    ClassEnum selectedClass = ClassEnum.fromString(itemConfig.getKey());
+                    ClassEnum selectedClass = ClassEnum.fromString(guiItem.getKey());
 
                     if (registerNewUserClass(player, selectedClass)) {
                         awardClassItems(player, selectedClass);
-                        sendConfirmationMessage(player, itemConfig);
+                        sendConfirmationMessage(player, guiItem);
                         closeView(view);
                     } else {
-                        sendAlreadyChosenMessage(player, itemConfig);
+                        sendAlreadyChosenMessage(player, guiItem);
                     }
 
                     break;
@@ -69,6 +81,12 @@ public class ClassEvent implements Listener {
             userClassEntity = new UserClassEntity(playerUUID, classId);
 
             userClassService.insert(userClassEntity);
+
+            List<ClassSkillEntity> classSkillEntities = classSkillService.getAllByClass(classId);
+
+            for (ClassSkillEntity classSkillEntity : classSkillEntities) {
+                userSkillService.insert(new UserSkillEntity(playerUUID, classSkillEntity.getSkillId()));
+            }
 
             return true;
         } else {
