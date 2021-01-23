@@ -16,9 +16,7 @@ import br.com.rafaelfaustini.minecraftrpg.config.GuiConfig;
 import br.com.rafaelfaustini.minecraftrpg.config.GuiItemConfig;
 import br.com.rafaelfaustini.minecraftrpg.config.MessageConfig;
 import br.com.rafaelfaustini.minecraftrpg.model.ClassEntity;
-import br.com.rafaelfaustini.minecraftrpg.model.UserClassEntity;
-import br.com.rafaelfaustini.minecraftrpg.service.ClassService;
-import br.com.rafaelfaustini.minecraftrpg.service.UserClassService;
+import br.com.rafaelfaustini.minecraftrpg.service.UserService;
 import br.com.rafaelfaustini.minecraftrpg.utils.GuiUtil;
 import br.com.rafaelfaustini.minecraftrpg.utils.TextUtil;
 
@@ -28,14 +26,12 @@ public class ClassCommand implements CommandExecutor {
 
     private final MessageConfig messageConfig;
     private final GuiConfig guiClassConfig;
-    private final ClassService classService;
-    private final UserClassService userClassService;
+    private final UserService userService;
 
     public ClassCommand() {
         messageConfig = ConfigurationProvider.getMessageConfig();
         guiClassConfig = ConfigurationProvider.getClassGuiConfig();
-        classService = new ClassService();
-        userClassService = new UserClassService();
+        userService = new UserService();
     }
 
     @Override
@@ -46,15 +42,13 @@ public class ClassCommand implements CommandExecutor {
                 String playerUUID = player.getUniqueId().toString();
                 Integer playerLevel = player.getLevel();
 
-                List<UserClassEntity> userClassEntities = userClassService.getAllByUser(playerUUID);
+                List<ClassEntity> userClasses = userService.get(playerUUID).getClasses();
 
-                if (userClassEntities.isEmpty() || playerLevel > MULTI_CLASS_LEVEL) {
+                if (userClasses.isEmpty() || playerLevel > MULTI_CLASS_LEVEL) {
                     openClassChoiceInventory(player);
                 } else {
-                    for (UserClassEntity userClassEntity : userClassEntities) {
-                        Long classId = userClassEntity.getClassId();
-
-                        sendClassIdMessage(player, classId);
+                    for (ClassEntity userClass : userClasses) {
+                        sendClassMessage(player, userClass);
                     }
                 }
             }
@@ -80,18 +74,9 @@ public class ClassCommand implements CommandExecutor {
         player.openInventory(gui);
     }
 
-    private void sendClassIdMessage(Player player, Long classId) {
-        ClassEntity classEntity = classService.get(classId);
+    private void sendClassMessage(Player player, ClassEntity classEntity) {
+        String message = String.format(messageConfig.getClassAlreadyChosen(), classEntity.getItem().getDisplayName());
 
-        List<GuiItemConfig> guiItems = guiClassConfig.getGuiItems();
-        for (GuiItemConfig guiItem : guiItems) {
-            if (guiItem.getKey().equals(classEntity.getName())) {
-                String message = String.format(messageConfig.getClassAlreadyChosen(), guiItem.getDisplayName());
-
-                player.sendMessage(TextUtil.coloredText(message));
-
-                break;
-            }
-        }
+        player.sendMessage(TextUtil.coloredText(message));
     }
 }

@@ -1,7 +1,5 @@
 package br.com.rafaelfaustini.minecraftrpg.events;
 
-import java.util.List;
-
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,21 +9,17 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import br.com.rafaelfaustini.minecraftrpg.MinecraftRpg;
 import br.com.rafaelfaustini.minecraftrpg.config.ConfigurationProvider;
 import br.com.rafaelfaustini.minecraftrpg.config.MessageConfig;
-import br.com.rafaelfaustini.minecraftrpg.model.UserClassEntity;
 import br.com.rafaelfaustini.minecraftrpg.model.UserEntity;
-import br.com.rafaelfaustini.minecraftrpg.service.UserClassService;
 import br.com.rafaelfaustini.minecraftrpg.service.UserService;
 import br.com.rafaelfaustini.minecraftrpg.utils.TextUtil;
 
 public class JoinEvent implements Listener {
     private final MessageConfig messageConfig;
     private final UserService userService;
-    private final UserClassService userClassService;
 
     public JoinEvent() {
         messageConfig = ConfigurationProvider.getMessageConfig();
         userService = new UserService();
-        userClassService = new UserClassService();
     }
 
     @EventHandler
@@ -34,7 +28,7 @@ public class JoinEvent implements Listener {
 
         insertPlayer(player);
 
-        if (!playerHasAClass(player)) {
+        if (playerHasNoClasses(player)) {
             sendWelcomeMessage(player);
         }
     }
@@ -64,15 +58,15 @@ public class JoinEvent implements Listener {
         }
     }
 
-    private boolean playerHasAClass(Player player) {
+    private boolean playerHasNoClasses(Player player) {
         String playerUUID = player.getUniqueId().toString();
 
-        List<UserClassEntity> userClassEntities = userClassService.getAllByUser(playerUUID);
+        UserEntity userEntity = userService.get(playerUUID);
 
-        if (userClassEntities.isEmpty()) {
-            return false;
-        } else {
+        if (userEntity.getClasses().isEmpty()) {
             return true;
+        } else {
+            return false;
         }
     }
 }

@@ -6,32 +6,29 @@ import java.util.stream.Collectors;
 
 import br.com.rafaelfaustini.minecraftrpg.dao.ItemDAO;
 import br.com.rafaelfaustini.minecraftrpg.dao.LoreDAO;
-import br.com.rafaelfaustini.minecraftrpg.dao.SkillDAO;
 import br.com.rafaelfaustini.minecraftrpg.dao.SqliteConnection;
 import br.com.rafaelfaustini.minecraftrpg.model.ItemEntity;
-import br.com.rafaelfaustini.minecraftrpg.model.LoreEntity;
-import br.com.rafaelfaustini.minecraftrpg.model.SkillEntity;
 import br.com.rafaelfaustini.minecraftrpg.utils.LoggingUtil;
 
-public class SkillService {
+public class ItemService {
 
-    public SkillEntity get(Long id) {
+    public ItemEntity get(Long id) {
         SqliteConnection sql = new SqliteConnection();
-        SkillEntity skill = null;
+        ItemEntity item = null;
 
         try {
             Connection con = sql.openConnection();
-            SkillDAO skillDAO = new SkillDAO(con);
+            ItemDAO itemDAO = new ItemDAO(con);
 
-            skill = skillDAO.get(id);
+            item = itemDAO.get(id);
 
-            if (skill != null) {
-                ItemEntity item = getSkillItem(skill, con);
+            if (item != null) {
+                List<String> lore = getItemLore(item, con);
 
-                skill.setItem(item);
+                item.setLore(lore);
             }
         } catch (Exception e) {
-            LoggingUtil.error("Database Get SkillEntity", e);
+            LoggingUtil.error("Database Get ItemEntity", e);
         } finally {
             try {
                 sql.close();
@@ -40,26 +37,26 @@ public class SkillService {
             }
         }
 
-        return skill;
+        return item;
     }
 
-    public SkillEntity getByName(String name) {
+    public ItemEntity getByName(String name) {
         SqliteConnection sql = new SqliteConnection();
-        SkillEntity skill = null;
+        ItemEntity item = null;
 
         try {
             Connection con = sql.openConnection();
-            SkillDAO skillDAO = new SkillDAO(con);
+            ItemDAO itemDAO = new ItemDAO(con);
 
-            skill = skillDAO.getByName(name);
+            item = itemDAO.getByName(name);
 
-            if (skill != null) {
-                ItemEntity item = getSkillItem(skill, con);
+            if (item != null) {
+                List<String> lore = getItemLore(item, con);
 
-                skill.setItem(item);
+                item.setLore(lore);
             }
         } catch (Exception e) {
-            LoggingUtil.error("Database Get SkillEntity", e);
+            LoggingUtil.error("Database Get ItemEntity", e);
         } finally {
             try {
                 sql.close();
@@ -68,26 +65,26 @@ public class SkillService {
             }
         }
 
-        return skill;
+        return item;
     }
 
-    public List<SkillEntity> getAll() {
+    public List<ItemEntity> getAll() {
         SqliteConnection sql = new SqliteConnection();
-        List<SkillEntity> skills = null;
+        List<ItemEntity> items = null;
 
         try {
             Connection con = sql.openConnection();
-            SkillDAO skillDAO = new SkillDAO(con);
+            ItemDAO itemDAO = new ItemDAO(con);
 
-            skills = skillDAO.getAll();
+            items = itemDAO.getAll();
 
-            for (SkillEntity skill : skills) {
-                ItemEntity item = getSkillItem(skill, con);
+            for (ItemEntity item : items) {
+                List<String> lore = getItemLore(item, con);
 
-                skill.setItem(item);
+                item.setLore(lore);
             }
         } catch (Exception e) {
-            LoggingUtil.error("Database GetAll SkillEntity", e);
+            LoggingUtil.error("Database GetAll ItemEntity", e);
         } finally {
             try {
                 sql.close();
@@ -96,19 +93,19 @@ public class SkillService {
             }
         }
 
-        return skills;
+        return items;
     }
 
-    public void insert(SkillEntity skillEntity) {
+    public void insert(ItemEntity itemEntity) {
         SqliteConnection sql = new SqliteConnection();
 
         try {
             Connection con = sql.openConnection();
-            SkillDAO skillDAO = new SkillDAO(con);
+            ItemDAO itemDAO = new ItemDAO(con);
 
-            skillDAO.insert(skillEntity);
+            itemDAO.insert(itemEntity);
         } catch (Exception e) {
-            LoggingUtil.error("Database Insert SkillEntity", e);
+            LoggingUtil.error("Database Insert ItemEntity", e);
         } finally {
             try {
                 sql.close();
@@ -118,17 +115,17 @@ public class SkillService {
         }
     }
 
-    public void update(SkillEntity skillEntity) {
+    public void update(ItemEntity itemEntity) {
         SqliteConnection sql = new SqliteConnection();
 
         try {
             Connection con = sql.openConnection();
-            SkillDAO skillDAO = new SkillDAO(con);
+            ItemDAO itemDAO = new ItemDAO(con);
 
-            skillDAO.update(skillEntity);
-            skillDAO = null;
+            itemDAO.update(itemEntity);
+            itemDAO = null;
         } catch (Exception e) {
-            LoggingUtil.error("Database Update SkillEntity", e);
+            LoggingUtil.error("Database Update ItemEntity", e);
         } finally {
             try {
                 sql.close();
@@ -143,11 +140,11 @@ public class SkillService {
 
         try {
             Connection con = sql.openConnection();
-            SkillDAO skillDAO = new SkillDAO(con);
+            ItemDAO itemDAO = new ItemDAO(con);
 
-            skillDAO.delete(id);
+            itemDAO.delete(id);
         } catch (Exception e) {
-            LoggingUtil.error("Database Delete SkillEntity", e);
+            LoggingUtil.error("Database Delete ItemEntity", e);
         } finally {
             try {
                 sql.close();
@@ -157,15 +154,9 @@ public class SkillService {
         }
     }
 
-    private ItemEntity getSkillItem(SkillEntity skill, Connection con) throws Exception {
-        ItemDAO itemDAO = new ItemDAO(con);
+    private List<String> getItemLore(ItemEntity item, Connection con) throws Exception {
         LoreDAO loreDAO = new LoreDAO(con);
 
-        ItemEntity item = itemDAO.get(skill.getItemId());
-        List<LoreEntity> lores = loreDAO.getAllByItem(item.getId());
-
-        item.setLore(lores.stream().map(lore -> lore.getLore()).collect(Collectors.toList())); // hmmmm...
-
-        return item;
+        return loreDAO.getAllByItem(item.getId()).stream().map(lore -> lore.getLore()).collect(Collectors.toList()); // hmmmmm...
     }
 }

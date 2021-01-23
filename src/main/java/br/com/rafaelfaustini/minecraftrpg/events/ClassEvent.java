@@ -1,6 +1,7 @@
 package br.com.rafaelfaustini.minecraftrpg.events;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -17,28 +18,25 @@ import br.com.rafaelfaustini.minecraftrpg.config.GuiConfig;
 import br.com.rafaelfaustini.minecraftrpg.config.GuiItemConfig;
 import br.com.rafaelfaustini.minecraftrpg.config.MessageConfig;
 import br.com.rafaelfaustini.minecraftrpg.enums.ClassEnum;
-import br.com.rafaelfaustini.minecraftrpg.model.ClassSkillEntity;
-import br.com.rafaelfaustini.minecraftrpg.model.UserClassEntity;
-import br.com.rafaelfaustini.minecraftrpg.model.UserSkillEntity;
-import br.com.rafaelfaustini.minecraftrpg.service.ClassSkillService;
-import br.com.rafaelfaustini.minecraftrpg.service.UserClassService;
-import br.com.rafaelfaustini.minecraftrpg.service.UserSkillService;
+import br.com.rafaelfaustini.minecraftrpg.model.ClassEntity;
+import br.com.rafaelfaustini.minecraftrpg.model.SkillEntity;
+import br.com.rafaelfaustini.minecraftrpg.model.UserEntity;
+import br.com.rafaelfaustini.minecraftrpg.service.ClassService;
+import br.com.rafaelfaustini.minecraftrpg.service.UserService;
 import br.com.rafaelfaustini.minecraftrpg.utils.TextUtil;
 
 public class ClassEvent implements Listener {
 
     private final MessageConfig messageConfig;
     private final GuiConfig guiClassConfig;
-    private final UserClassService userClassService;
-    private final ClassSkillService classSkillService;
-    private final UserSkillService userSkillService;
+    private final UserService userService;
+    private final ClassService classService;
 
     public ClassEvent() {
         messageConfig = ConfigurationProvider.getMessageConfig();
         guiClassConfig = ConfigurationProvider.getClassGuiConfig();
-        userClassService = new UserClassService();
-        classSkillService = new ClassSkillService();
-        userSkillService = new UserSkillService();
+        userService = new UserService();
+        classService = new ClassService();
     }
 
     @EventHandler
@@ -55,7 +53,7 @@ public class ClassEvent implements Listener {
                     Player player = (Player) event.getWhoClicked();
                     ClassEnum selectedClass = ClassEnum.fromString(guiItem.getKey());
 
-                    if (registerNewUserClass(player, selectedClass)) {
+                    if (registerNewUserClass(player, guiItem.getKey())) {
                         awardClassItems(player, selectedClass);
                         sendConfirmationMessage(player, guiItem);
                         closeView(view);
@@ -71,21 +69,18 @@ public class ClassEvent implements Listener {
         }
     }
 
-    private Boolean registerNewUserClass(Player player, ClassEnum selectedClass) {
+    private Boolean registerNewUserClass(Player player, String className) {
         String playerUUID = player.getUniqueId().toString();
-        Long classId = Long.valueOf(selectedClass.ordinal() + 1); // Could be better
 
-        UserClassEntity userClassEntity = userClassService.get(playerUUID, classId);
+        UserEntity user = userService.get(playerUUID);
+        ClassEntity classEntity = classService.getByName(className);
 
-        if (userClassEntity == null) {
-            userClassEntity = new UserClassEntity(playerUUID, classId);
+        if (!user.getClasses().stream().map(userClass -> userClass.getName()).collect(Collectors.toList())
+                .contains(classEntity.getName())) {
+            userService.addUserClass(playerUUID, classEntity.getId());
 
-            userClassService.insert(userClassEntity);
-
-            List<ClassSkillEntity> classSkillEntities = classSkillService.getAllByClass(classId);
-
-            for (ClassSkillEntity classSkillEntity : classSkillEntities) {
-                userSkillService.insert(new UserSkillEntity(playerUUID, classSkillEntity.getSkillId(), 0));
+            for (SkillEntity skill : classEntity.getSkills()) {
+                userService.addUserSkill(playerUUID, skill.getId());
             }
 
             return true;

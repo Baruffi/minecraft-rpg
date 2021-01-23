@@ -6,8 +6,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.rafaelfaustini.minecraftrpg.enums.ActiveSkillEnum;
-import br.com.rafaelfaustini.minecraftrpg.enums.ClassEnum;
 import br.com.rafaelfaustini.minecraftrpg.interfaces.IDao;
 import br.com.rafaelfaustini.minecraftrpg.model.ClassSkillEntity;
 
@@ -24,15 +22,6 @@ public class ClassSkillDAO implements IDao<Long, ClassSkillEntity> { // <Type of
         String sql = "CREATE TABLE IF NOT EXISTS CLASSES_SKILLS ( ID INTEGER PRIMARY KEY, CLASS_ID TEXT, SKILL_ID INTEGER, FOREIGN KEY(CLASS_ID) REFERENCES CLASSES(ID), FOREIGN KEY(SKILL_ID) REFERENCES SKILLS(ID), UNIQUE (CLASS_ID, SKILL_ID) )";
         PreparedStatement ps = connection.prepareStatement(sql);
 
-        ps.execute();
-    }
-
-    public void fillTable() throws Exception { // Could be better
-        String sql = "INSERT OR REPLACE INTO CLASSES_SKILLS (CLASS_ID, SKILL_ID) VALUES ( ?, ? )";
-        PreparedStatement ps = connection.prepareStatement(sql);
-
-        ps.setLong(1, ClassEnum.MAGE.ordinal() + 1);
-        ps.setLong(2, ActiveSkillEnum.FIREBALL.ordinal() + 1);
         ps.execute();
     }
 
@@ -138,23 +127,23 @@ public class ClassSkillDAO implements IDao<Long, ClassSkillEntity> { // <Type of
     }
 
     @Override
-    public void insert(ClassSkillEntity ClassSkillEntity) throws Exception {
+    public void insert(ClassSkillEntity classSkillEntity) throws Exception {
         String sql = "INSERT INTO CLASSES_SKILLS (CLASS_ID, SKILL_ID) VALUES ( ?, ? )";
         PreparedStatement ps = connection.prepareStatement(sql);
 
-        ps.setLong(1, ClassSkillEntity.getClassId());
-        ps.setLong(2, ClassSkillEntity.getSkillId());
+        ps.setLong(1, classSkillEntity.getClassId());
+        ps.setLong(2, classSkillEntity.getSkillId());
         ps.execute();
     }
 
     @Override
-    public void update(ClassSkillEntity ClassSkillEntity) throws Exception {
+    public void update(ClassSkillEntity classSkillEntity) throws Exception {
         String sql = "UPDATE CLASSES_SKILLS SET CLASS_ID=?, SKILL_ID=? WHERE ID=?";
         PreparedStatement ps = connection.prepareStatement(sql);
 
-        ps.setLong(1, ClassSkillEntity.getClassId());
-        ps.setLong(2, ClassSkillEntity.getSkillId());
-        ps.setLong(3, ClassSkillEntity.getId());
+        ps.setLong(1, classSkillEntity.getClassId());
+        ps.setLong(2, classSkillEntity.getSkillId());
+        ps.setLong(3, classSkillEntity.getId());
         ps.execute();
     }
 

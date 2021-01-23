@@ -4,19 +4,23 @@ public class SkillEntity {
     private Long id;
     private String name;
     private Integer type;
+    private Long itemId;
+    private ItemEntity item;
 
     public SkillEntity() {
     }
 
-    public SkillEntity(String name, Integer type) {
+    public SkillEntity(String name, Integer type, Long itemId) {
         this.name = name;
         this.type = type;
+        this.itemId = itemId;
     }
 
-    public SkillEntity(Long id, String name, Integer type) {
+    public SkillEntity(Long id, String name, Integer type, Long itemId) {
         this.id = id;
         this.name = name;
         this.type = type;
+        this.itemId = itemId;
     }
 
     public Long getId() {
@@ -41,5 +45,21 @@ public class SkillEntity {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public Long getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
+    }
+
+    public ItemEntity getItem() {
+        return item;
+    }
+
+    public void setItem(ItemEntity item) {
+        this.item = item;
     }
 }
