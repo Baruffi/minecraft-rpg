@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -204,13 +202,7 @@ public class SkillEvent implements Listener {
 
         switch (activeSkill) {
             case FIREBALL:
-                World playerWorld = player.getWorld();
-                Location playerLocation = player.getLocation();
-                Location eyeLocation = player.getEyeLocation();
-                Location fireballLocation = eyeLocation.toVector().add(playerLocation.getDirection().multiply(2))
-                        .toLocation(playerWorld, playerLocation.getYaw(), playerLocation.getPitch());
-
-                playerWorld.spawn(fireballLocation, Fireball.class);
+                player.launchProjectile(Fireball.class);
 
                 break;
 
