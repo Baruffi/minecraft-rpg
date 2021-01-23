@@ -8,7 +8,6 @@ import java.util.List;
 
 import br.com.rafaelfaustini.minecraftrpg.interfaces.IDao;
 import br.com.rafaelfaustini.minecraftrpg.model.UserSkillEntity;
-import br.com.rafaelfaustini.minecraftrpg.utils.LoggingUtil;
 
 public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of id, entity>
 
@@ -30,7 +29,7 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
     public UserSkillEntity get(Long id) throws Exception {
         ResultSet rs = null;
         UserSkillEntity userSkill = null;
-        String sql = "SELECT USER_UUID, SKILL_ID FROM USERS_SKILLS WHERE ID=?";
+        String sql = "SELECT USER_UUID, SKILL_ID, STATUS FROM USERS_SKILLS WHERE ID=?";
         PreparedStatement ps = connection.prepareStatement(sql);
 
         ps.setLong(1, id);
@@ -39,8 +38,9 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
         if (rs.next()) {
             String userUUID = rs.getString(1);
             Long skillId = rs.getLong(2);
+            Integer status = rs.getInt(3);
 
-            userSkill = new UserSkillEntity(id, userUUID, skillId);
+            userSkill = new UserSkillEntity(id, userUUID, skillId, status);
         }
 
         return userSkill;
@@ -49,7 +49,7 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
     public UserSkillEntity get(String userUUID, Long skillId) throws Exception {
         ResultSet rs = null;
         UserSkillEntity userSkill = null;
-        String sql = "SELECT ID FROM USERS_SKILLS WHERE USER_UUID=? AND SKILL_ID=?";
+        String sql = "SELECT ID, STATUS FROM USERS_SKILLS WHERE USER_UUID=? AND SKILL_ID=?";
         PreparedStatement ps = connection.prepareStatement(sql);
 
         ps.setString(1, userUUID);
@@ -58,8 +58,9 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
 
         if (rs.next()) {
             Long id = rs.getLong(1);
+            Integer status = rs.getInt(2);
 
-            userSkill = new UserSkillEntity(id, userUUID, skillId);
+            userSkill = new UserSkillEntity(id, userUUID, skillId, status);
         }
 
         return userSkill;
@@ -69,7 +70,7 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
     public List<UserSkillEntity> getAll() throws Exception {
         ResultSet rs = null;
         List<UserSkillEntity> userSkills = new ArrayList<>();
-        String sql = "SELECT ID, USER_UUID, SKILL_ID FROM USERS_SKILLS";
+        String sql = "SELECT ID, USER_UUID, SKILL_ID, STATUS FROM USERS_SKILLS";
         PreparedStatement ps = connection.prepareStatement(sql);
 
         rs = ps.executeQuery();
@@ -78,7 +79,9 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
             Long id = rs.getLong(1);
             String userUUID = rs.getString(2);
             Long skillId = rs.getLong(3);
-            UserSkillEntity userSkill = new UserSkillEntity(id, userUUID, skillId);
+            Integer status = rs.getInt(4);
+
+            UserSkillEntity userSkill = new UserSkillEntity(id, userUUID, skillId, status);
 
             userSkills.add(userSkill);
         }
@@ -89,7 +92,7 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
     public List<UserSkillEntity> getAllByUser(String userUUID) throws Exception {
         ResultSet rs = null;
         List<UserSkillEntity> userSkills = new ArrayList<>();
-        String sql = "SELECT ID, SKILL_ID FROM USERS_SKILLS WHERE USER_UUID=?";
+        String sql = "SELECT ID, SKILL_ID, STATUS FROM USERS_SKILLS WHERE USER_UUID=?";
         PreparedStatement ps = connection.prepareStatement(sql);
 
         ps.setString(1, userUUID);
@@ -98,8 +101,9 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
         if (rs.next()) {
             Long id = rs.getLong(1);
             Long skillId = rs.getLong(2);
+            Integer status = rs.getInt(3);
 
-            UserSkillEntity userSkill = new UserSkillEntity(id, userUUID, skillId);
+            UserSkillEntity userSkill = new UserSkillEntity(id, userUUID, skillId, status);
 
             userSkills.add(userSkill);
         }
@@ -110,7 +114,7 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
     public List<UserSkillEntity> getAllBySkill(Long skillId) throws Exception {
         ResultSet rs = null;
         List<UserSkillEntity> userSkills = new ArrayList<>();
-        String sql = "SELECT ID, USER_UUID FROM USERS_SKILLS WHERE SKILL_ID=?";
+        String sql = "SELECT ID, USER_UUID, STATUS FROM USERS_SKILLS WHERE SKILL_ID=?";
         PreparedStatement ps = connection.prepareStatement(sql);
 
         ps.setLong(1, skillId);
@@ -119,7 +123,9 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
         while (rs.next()) {
             Long id = rs.getLong(1);
             String userUUID = rs.getString(2);
-            UserSkillEntity userSkill = new UserSkillEntity(id, userUUID, skillId);
+            Integer status = rs.getInt(3);
+
+            UserSkillEntity userSkill = new UserSkillEntity(id, userUUID, skillId, status);
 
             userSkills.add(userSkill);
         }
@@ -147,13 +153,7 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
         ps.setInt(3, userSkillEntity.getStatus());
         ps.setLong(4, userSkillEntity.getId());
 
-        // TODO: UPDATE STATEMENT NOT WORKING. REMOVE LOGGING WHEN WORKING
-
-        LoggingUtil.info(ps.toString());
-
-        Integer returnInt = ps.executeUpdate();
-
-        LoggingUtil.info(returnInt.toString());
+        ps.execute();
     }
 
     @Override

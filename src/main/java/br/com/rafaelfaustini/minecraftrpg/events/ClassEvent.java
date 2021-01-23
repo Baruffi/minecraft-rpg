@@ -85,7 +85,7 @@ public class ClassEvent implements Listener {
             List<ClassSkillEntity> classSkillEntities = classSkillService.getAllByClass(classId);
 
             for (ClassSkillEntity classSkillEntity : classSkillEntities) {
-                userSkillService.insert(new UserSkillEntity(playerUUID, classSkillEntity.getSkillId()));
+                userSkillService.insert(new UserSkillEntity(playerUUID, classSkillEntity.getSkillId(), 0));
             }
 
             return true;

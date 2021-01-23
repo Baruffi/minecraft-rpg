@@ -122,14 +122,7 @@ public class SkillEvent implements Listener {
             // multiple skills to be active at
             // once; will probably be changed.
 
-            // TODO: UPDATE STATEMENT NOT WORKING. REMOVE LOGGING WHEN WORKING
-
-            player.sendMessage(SkillStatusEnum.fromInteger(userSkillEntity.getStatus()).toString());
-
             userSkillService.update(userSkillEntity);
-
-            player.sendMessage(
-                    SkillStatusEnum.fromInteger(userSkillService.get(playerUUID, skillId).getStatus()).toString());
 
             return true;
         }

@@ -9,15 +9,17 @@ public class UserSkillEntity {
     public UserSkillEntity() {
     }
 
-    public UserSkillEntity(String userUUID, Long skillId) {
+    public UserSkillEntity(String userUUID, Long skillId, Integer status) {
         this.userUUID = userUUID;
         this.skillId = skillId;
+        this.status = status;
     }
 
-    public UserSkillEntity(Long id, String userUUID, Long skillId) {
+    public UserSkillEntity(Long id, String userUUID, Long skillId, Integer status) {
         this.id = id;
         this.userUUID = userUUID;
         this.skillId = skillId;
+        this.status = status;
     }
 
     public Long getId() {
