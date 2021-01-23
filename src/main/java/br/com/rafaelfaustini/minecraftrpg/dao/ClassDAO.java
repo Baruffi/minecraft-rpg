@@ -27,25 +27,31 @@ public class ClassDAO implements IDao<Long, ClassEntity> { // <Type of id, entit
     }
 
     public void fillTable() throws Exception { // Could be better
-        String sql = "INSERT OR REPLACE INTO CLASSES (NAME) VALUES ( ? )";
+        String sql = "INSERT OR REPLACE INTO CLASSES (ID, NAME) VALUES ( ?, ? )";
         PreparedStatement ps = connection.prepareStatement(sql);
 
-        ps.setString(1, ClassEnum.WARRIOR.getClassName());
+        ps.setLong(1, ClassEnum.WARRIOR.ordinal() + 1);
+        ps.setString(2, ClassEnum.WARRIOR.getClassName());
         ps.execute();
 
-        ps.setString(1, ClassEnum.MAGE.getClassName());
+        ps.setLong(1, ClassEnum.MAGE.ordinal() + 1);
+        ps.setString(2, ClassEnum.MAGE.getClassName());
         ps.execute();
 
-        ps.setString(1, ClassEnum.ROGUE.getClassName());
+        ps.setLong(1, ClassEnum.ROGUE.ordinal() + 1);
+        ps.setString(2, ClassEnum.ROGUE.getClassName());
         ps.execute();
 
-        ps.setString(1, ClassEnum.DRUID.getClassName());
+        ps.setLong(1, ClassEnum.DRUID.ordinal() + 1);
+        ps.setString(2, ClassEnum.DRUID.getClassName());
         ps.execute();
 
-        ps.setString(1, ClassEnum.ALCHEMIST.getClassName());
+        ps.setLong(1, ClassEnum.ALCHEMIST.ordinal() + 1);
+        ps.setString(2, ClassEnum.ALCHEMIST.getClassName());
         ps.execute();
 
-        ps.setString(1, ClassEnum.BARD.getClassName());
+        ps.setLong(1, ClassEnum.BARD.ordinal() + 1);
+        ps.setString(2, ClassEnum.BARD.getClassName());
         ps.execute();
     }
 
@@ -61,24 +67,6 @@ public class ClassDAO implements IDao<Long, ClassEntity> { // <Type of id, entit
 
         if (rs.next()) {
             String name = rs.getString(1);
-
-            classEntity = new ClassEntity(id, name);
-        }
-
-        return classEntity;
-    }
-
-    public ClassEntity getFirstByName(String name) throws Exception {
-        ResultSet rs = null;
-        ClassEntity classEntity = null;
-        String sql = "SELECT ID FROM CLASSES WHERE NAME=?";
-        PreparedStatement ps = connection.prepareStatement(sql);
-
-        ps.setString(1, name);
-        rs = ps.executeQuery();
-
-        if (rs.next()) {
-            Long id = rs.getLong(1);
 
             classEntity = new ClassEntity(id, name);
         }

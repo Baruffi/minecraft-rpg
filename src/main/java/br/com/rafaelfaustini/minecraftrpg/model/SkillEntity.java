@@ -1,19 +1,22 @@
 package br.com.rafaelfaustini.minecraftrpg.model;
 
-public class ClassEntity {
+public class SkillEntity {
     private Long id;
     private String name;
+    private Integer type;
 
-    public ClassEntity() {
+    public SkillEntity() {
     }
 
-    public ClassEntity(String name) {
+    public SkillEntity(String name, Integer type) {
         this.name = name;
+        this.type = type;
     }
 
-    public ClassEntity(Long id, String name) {
+    public SkillEntity(Long id, String name, Integer type) {
         this.id = id;
         this.name = name;
+        this.type = type;
     }
 
     public Long getId() {
@@ -30,5 +33,13 @@ public class ClassEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

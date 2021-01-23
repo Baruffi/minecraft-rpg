@@ -10,9 +10,12 @@ import br.com.rafaelfaustini.minecraftrpg.commands.ClassCommand;
 import br.com.rafaelfaustini.minecraftrpg.config.ConfigurationProvider;
 import br.com.rafaelfaustini.minecraftrpg.config.CustomConfig;
 import br.com.rafaelfaustini.minecraftrpg.dao.ClassDAO;
+import br.com.rafaelfaustini.minecraftrpg.dao.ClassSkillDAO;
+import br.com.rafaelfaustini.minecraftrpg.dao.SkillDAO;
 import br.com.rafaelfaustini.minecraftrpg.dao.SqliteConnection;
 import br.com.rafaelfaustini.minecraftrpg.dao.UserClassDAO;
 import br.com.rafaelfaustini.minecraftrpg.dao.UserDAO;
+import br.com.rafaelfaustini.minecraftrpg.dao.UserSkillDAO;
 import br.com.rafaelfaustini.minecraftrpg.events.ClassEvent;
 import br.com.rafaelfaustini.minecraftrpg.events.JoinEvent;
 import br.com.rafaelfaustini.minecraftrpg.events.SkillEvent;
@@ -53,13 +56,22 @@ public class MinecraftRpg extends JavaPlugin {
             Connection con = sql.openConnection();
             UserDAO userDAO = new UserDAO(con);
             ClassDAO classDAO = new ClassDAO(con);
+            SkillDAO skillDAO = new SkillDAO(con);
             UserClassDAO userClassDAO = new UserClassDAO(con);
+            UserSkillDAO userSkillDAO = new UserSkillDAO(con);
+            ClassSkillDAO classSkillDAO = new ClassSkillDAO(con);
 
             userDAO.createTable();
             classDAO.createTable();
+            skillDAO.createTable();
             userClassDAO.createTable();
+            userSkillDAO.createTable();
+            classSkillDAO.createTable();
 
             classDAO.fillTable();
+            skillDAO.fillTable();
+            classSkillDAO.fillTable();
+
         } catch (Exception e) {
             LoggingUtil.error("Error initializing database", e);
         } finally {
