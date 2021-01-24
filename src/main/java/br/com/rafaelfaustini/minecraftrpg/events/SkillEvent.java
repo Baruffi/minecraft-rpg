@@ -30,7 +30,6 @@ import br.com.rafaelfaustini.minecraftrpg.model.UserEntity;
 import br.com.rafaelfaustini.minecraftrpg.service.SkillService;
 import br.com.rafaelfaustini.minecraftrpg.service.UserService;
 import br.com.rafaelfaustini.minecraftrpg.utils.GuiUtil;
-import br.com.rafaelfaustini.minecraftrpg.utils.LoggingUtil;
 import br.com.rafaelfaustini.minecraftrpg.utils.TextUtil;
 
 public class SkillEvent implements Listener {
@@ -111,9 +110,6 @@ public class SkillEvent implements Listener {
 
         UserEntity user = userService.get(playerUUID);
         SkillEntity skill = skillService.getByName(skillName);
-
-        LoggingUtil.info(user.getSkills().toString());
-        LoggingUtil.info(skill.toString());
 
         if (user.getSkills().stream().map(userSkill -> userSkill.getName()).collect(Collectors.toList())
                 .contains(skill.getName())) {
