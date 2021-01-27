@@ -94,7 +94,7 @@ public class UserClassDAO implements IDao<Long, UserClassEntity> { // <Type of i
         ps.setString(1, userUUID);
         rs = ps.executeQuery();
 
-        if (rs.next()) {
+        while (rs.next()) {
             Long id = rs.getLong(1);
             Long classId = rs.getLong(2);
 

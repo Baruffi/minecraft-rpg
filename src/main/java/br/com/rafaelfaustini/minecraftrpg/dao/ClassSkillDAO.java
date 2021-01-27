@@ -94,7 +94,7 @@ public class ClassSkillDAO implements IDao<Long, ClassSkillEntity> { // <Type of
         ps.setLong(1, classId);
         rs = ps.executeQuery();
 
-        if (rs.next()) {
+        while (rs.next()) {
             Long id = rs.getLong(1);
             Long skillId = rs.getLong(2);
 

@@ -2,7 +2,6 @@ package br.com.rafaelfaustini.minecraftrpg.events;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -50,9 +49,10 @@ public class SkillEvent implements Listener {
         skillService = new SkillService();
 
         castItems.add(Material.WOODEN_AXE);
+        castItems.add(Material.WOODEN_HOE);
+        castItems.add(Material.WOODEN_PICKAXE);
+        castItems.add(Material.WOODEN_SHOVEL);
         castItems.add(Material.WOODEN_SWORD);
-        castItems.add(Material.MUSIC_DISC_CAT);
-        castItems.add(Material.BONE);
     }
 
     @EventHandler
@@ -111,8 +111,7 @@ public class SkillEvent implements Listener {
         UserEntity user = userService.get(playerUUID);
         SkillEntity skill = skillService.getByName(skillName);
 
-        if (user.getSkills().stream().map(userSkill -> userSkill.getName()).collect(Collectors.toList())
-                .contains(skill.getName())) {
+        if (userHasSkill(user, skill)) {
             Integer status = user.getSkillStatusMap().get(skill.getName());
 
             if (status == SkillStatusEnum.ACTIVE.getStatusValue()) {
@@ -133,6 +132,10 @@ public class SkillEvent implements Listener {
 
             return false;
         }
+    }
+
+    private boolean userHasSkill(UserEntity user, SkillEntity skill) {
+        return user.getSkills().stream().anyMatch(userSkill -> userSkill.getName().equals(skill.getName()));
     }
 
     private void sendConfirmationMessage(Player player, GuiItemConfig itemConfig) {

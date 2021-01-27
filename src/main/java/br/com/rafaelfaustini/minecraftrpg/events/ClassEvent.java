@@ -1,7 +1,6 @@
 package br.com.rafaelfaustini.minecraftrpg.events;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -75,8 +74,7 @@ public class ClassEvent implements Listener {
         UserEntity user = userService.get(playerUUID);
         ClassEntity classEntity = classService.getByName(className);
 
-        if (!user.getClasses().stream().map(userClass -> userClass.getName()).collect(Collectors.toList())
-                .contains(classEntity.getName())) {
+        if (userDoesntHaveClass(user, classEntity)) {
             userService.addUserClass(playerUUID, classEntity.getId());
 
             for (SkillEntity skill : classEntity.getSkills()) {
@@ -87,6 +85,10 @@ public class ClassEvent implements Listener {
         } else {
             return false;
         }
+    }
+
+    private boolean userDoesntHaveClass(UserEntity user, ClassEntity classEntity) {
+        return user.getClasses().stream().noneMatch(userClass -> userClass.getName().equals(classEntity.getName()));
     }
 
     private void awardClassItems(Player player, ClassEnum selectedClass) {

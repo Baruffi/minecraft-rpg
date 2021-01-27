@@ -98,7 +98,7 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
         ps.setString(1, userUUID);
         rs = ps.executeQuery();
 
-        if (rs.next()) {
+        while (rs.next()) {
             Long id = rs.getLong(1);
             Long skillId = rs.getLong(2);
             Integer status = rs.getInt(3);
@@ -135,11 +135,12 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
 
     @Override
     public void insert(UserSkillEntity userSkillEntity) throws Exception {
-        String sql = "INSERT INTO USERS_SKILLS (USER_UUID, SKILL_ID) VALUES ( ?, ? )";
+        String sql = "INSERT INTO USERS_SKILLS (USER_UUID, SKILL_ID, STATUS) VALUES ( ?, ?, ? )";
         PreparedStatement ps = connection.prepareStatement(sql);
 
         ps.setString(1, userSkillEntity.getUserUUID());
         ps.setLong(2, userSkillEntity.getSkillId());
+        ps.setInt(3, userSkillEntity.getStatus());
         ps.execute();
     }
 
