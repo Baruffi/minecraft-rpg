@@ -56,7 +56,6 @@ public class InitService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -86,7 +85,6 @@ public class InitService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }

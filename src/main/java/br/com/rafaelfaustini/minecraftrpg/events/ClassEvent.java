@@ -48,7 +48,7 @@ public class ClassEvent implements Listener {
             for (GuiItemConfig guiItem : guiItems) {
                 ItemStack eventItem = event.getCurrentItem();
 
-                if (eventItem != null && eventItem.getType().equals(Material.getMaterial(guiItem.getMaterial()))) {
+                if (classItemWasClicked(guiItem, eventItem)) {
                     Player player = (Player) event.getWhoClicked();
                     ClassEnum selectedClass = ClassEnum.fromString(guiItem.getKey());
 
@@ -66,6 +66,10 @@ public class ClassEvent implements Listener {
 
             cancelEvent(event);
         }
+    }
+
+    private boolean classItemWasClicked(GuiItemConfig guiItem, ItemStack eventItem) {
+        return eventItem != null && eventItem.getType().equals(Material.getMaterial(guiItem.getMaterial()));
     }
 
     private Boolean registerNewUserClass(Player player, String className) {

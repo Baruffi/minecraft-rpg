@@ -65,7 +65,7 @@ public class SkillEvent implements Listener {
             for (GuiItemConfig guiItem : guiItems) {
                 ItemStack eventItem = event.getCurrentItem();
 
-                if (eventItem != null && eventItem.getType().equals(Material.getMaterial(guiItem.getMaterial()))) {
+                if (skillItemWasClicked(guiItem, eventItem)) {
                     Player player = (Player) event.getWhoClicked();
 
                     if (registerUserActiveSkill(player, guiItem.getKey())) {
@@ -79,6 +79,10 @@ public class SkillEvent implements Listener {
 
             cancelEvent(event);
         }
+    }
+
+    private boolean skillItemWasClicked(GuiItemConfig guiItem, ItemStack eventItem) {
+        return eventItem != null && eventItem.getType().equals(Material.getMaterial(guiItem.getMaterial()));
     }
 
     @EventHandler

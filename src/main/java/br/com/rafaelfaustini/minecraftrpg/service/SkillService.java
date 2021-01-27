@@ -35,7 +35,6 @@ public class SkillService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -63,7 +62,6 @@ public class SkillService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -91,7 +89,6 @@ public class SkillService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -112,7 +109,6 @@ public class SkillService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -126,13 +122,11 @@ public class SkillService {
             SkillDAO skillDAO = new SkillDAO(con);
 
             skillDAO.update(skillEntity);
-            skillDAO = null;
         } catch (Exception e) {
             LoggingUtil.error("Database Update SkillEntity", e);
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -151,7 +145,6 @@ public class SkillService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }

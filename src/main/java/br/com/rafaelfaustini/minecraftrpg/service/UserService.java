@@ -50,7 +50,6 @@ public class UserService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -82,7 +81,6 @@ public class UserService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -103,7 +101,6 @@ public class UserService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -117,13 +114,11 @@ public class UserService {
             UserDAO userDAO = new UserDAO(con);
 
             userDAO.update(userEntity);
-            userDAO = null;
         } catch (Exception e) {
             LoggingUtil.error("Database Update UserEntity", e);
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -146,7 +141,6 @@ public class UserService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -167,7 +161,6 @@ public class UserService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -189,7 +182,6 @@ public class UserService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -208,7 +200,6 @@ public class UserService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }

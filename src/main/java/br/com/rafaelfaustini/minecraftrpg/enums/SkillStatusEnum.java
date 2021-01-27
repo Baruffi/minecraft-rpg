@@ -14,10 +14,6 @@ public enum SkillStatusEnum {
     }
 
     public static SkillStatusEnum fromInteger(Integer statusValue) {
-        if (statusValue == null) {
-            statusValue = 0;
-        }
-
         for (SkillStatusEnum skillStatusEnum : SkillStatusEnum.values()) {
             if (skillStatusEnum.statusValue.equals(statusValue)) {
                 return skillStatusEnum;

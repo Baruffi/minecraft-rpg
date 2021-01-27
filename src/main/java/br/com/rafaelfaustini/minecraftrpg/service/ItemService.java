@@ -32,7 +32,6 @@ public class ItemService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -60,7 +59,6 @@ public class ItemService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -88,7 +86,6 @@ public class ItemService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -109,7 +106,6 @@ public class ItemService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -123,13 +119,11 @@ public class ItemService {
             ItemDAO itemDAO = new ItemDAO(con);
 
             itemDAO.update(itemEntity);
-            itemDAO = null;
         } catch (Exception e) {
             LoggingUtil.error("Database Update ItemEntity", e);
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -148,7 +142,6 @@ public class ItemService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }

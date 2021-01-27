@@ -43,7 +43,6 @@ public class ClassService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -75,7 +74,6 @@ public class ClassService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -107,7 +105,6 @@ public class ClassService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -128,7 +125,6 @@ public class ClassService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -142,13 +138,11 @@ public class ClassService {
             ClassDAO classDAO = new ClassDAO(con);
 
             classDAO.update(classEntity);
-            classDAO = null;
         } catch (Exception e) {
             LoggingUtil.error("Database Update ClassEntity", e);
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }
@@ -167,7 +161,6 @@ public class ClassService {
         } finally {
             try {
                 sql.close();
-                sql = null;
             } catch (Exception e) {
             }
         }

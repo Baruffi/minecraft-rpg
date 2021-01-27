@@ -14,10 +14,6 @@ public enum SkillTypeEnum {
     }
 
     public static SkillTypeEnum fromInteger(Integer typeValue) {
-        if (typeValue == null) {
-            typeValue = 0;
-        }
-
         for (SkillTypeEnum skillTypeEnum : SkillTypeEnum.values()) {
             if (skillTypeEnum.typeValue.equals(typeValue)) {
                 return skillTypeEnum;
