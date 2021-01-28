@@ -26,13 +26,19 @@ public class JoinEvent implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
+        insertPlayer(player);
+
+        if (playerHasNoClasses(player)) {
+            sendWelcomeMessage(player);
+        }
+    }
+
+    private void sendWelcomeMessage(Player player) {
         player.sendMessage(ChatColor.LIGHT_PURPLE + "-------------------------------");
         player.sendMessage(ChatColor.LIGHT_PURPLE + MinecraftRpg.getPlugin(MinecraftRpg.class).getName().toUpperCase()
                 + " VERSION 1.0");
         player.sendMessage(TextUtil.coloredText(messageConfig.getWelcome()));
         player.sendMessage(ChatColor.LIGHT_PURPLE + "-------------------------------");
-
-        insertPlayer(player);
     }
 
     private void insertPlayer(Player player) {
@@ -49,6 +55,18 @@ public class JoinEvent implements Listener {
             userEntity = new UserEntity(playerUUID, playerName);
 
             userService.update(userEntity);
+        }
+    }
+
+    private boolean playerHasNoClasses(Player player) {
+        String playerUUID = player.getUniqueId().toString();
+
+        UserEntity userEntity = userService.get(playerUUID);
+
+        if (userEntity.getClasses().isEmpty()) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

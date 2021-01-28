@@ -1,5 +1,7 @@
 package br.com.rafaelfaustini.minecraftrpg.events;
 
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -15,20 +17,25 @@ import br.com.rafaelfaustini.minecraftrpg.config.GuiConfig;
 import br.com.rafaelfaustini.minecraftrpg.config.GuiItemConfig;
 import br.com.rafaelfaustini.minecraftrpg.config.MessageConfig;
 import br.com.rafaelfaustini.minecraftrpg.enums.ClassEnum;
-import br.com.rafaelfaustini.minecraftrpg.model.UserClassEntity;
-import br.com.rafaelfaustini.minecraftrpg.service.UserClassService;
+import br.com.rafaelfaustini.minecraftrpg.model.ClassEntity;
+import br.com.rafaelfaustini.minecraftrpg.model.SkillEntity;
+import br.com.rafaelfaustini.minecraftrpg.model.UserEntity;
+import br.com.rafaelfaustini.minecraftrpg.service.ClassService;
+import br.com.rafaelfaustini.minecraftrpg.service.UserService;
 import br.com.rafaelfaustini.minecraftrpg.utils.TextUtil;
 
 public class ClassEvent implements Listener {
 
     private final MessageConfig messageConfig;
     private final GuiConfig guiClassConfig;
-    private final UserClassService userClassService;
+    private final UserService userService;
+    private final ClassService classService;
 
     public ClassEvent() {
         messageConfig = ConfigurationProvider.getMessageConfig();
         guiClassConfig = ConfigurationProvider.getClassGuiConfig();
-        userClassService = new UserClassService();
+        userService = new UserService();
+        classService = new ClassService();
     }
 
     @EventHandler
@@ -36,19 +43,21 @@ public class ClassEvent implements Listener {
         InventoryView view = event.getView();
 
         if (view.getTitle().equals(guiClassConfig.getGuiTitle())) {
-            for (GuiItemConfig itemConfig : guiClassConfig.getGuiItems()) {
+            List<GuiItemConfig> guiItems = guiClassConfig.getGuiItems();
+
+            for (GuiItemConfig guiItem : guiItems) {
                 ItemStack eventItem = event.getCurrentItem();
 
-                if (eventItem != null && eventItem.getType().equals(Material.getMaterial(itemConfig.getMaterial()))) {
+                if (classItemWasClicked(guiItem, eventItem)) {
                     Player player = (Player) event.getWhoClicked();
-                    ClassEnum selectedClass = ClassEnum.fromString(itemConfig.getKey());
+                    ClassEnum selectedClass = ClassEnum.fromString(guiItem.getKey());
 
-                    if (registerNewUserClass(player, selectedClass)) {
+                    if (registerNewUserClass(player, guiItem.getKey())) {
                         awardClassItems(player, selectedClass);
-                        sendConfirmationMessage(player, itemConfig);
+                        sendConfirmationMessage(player, guiItem);
                         closeView(view);
                     } else {
-                        sendAlreadyChosenMessage(player, itemConfig);
+                        sendAlreadyChosenMessage(player, guiItem);
                     }
 
                     break;
@@ -59,21 +68,31 @@ public class ClassEvent implements Listener {
         }
     }
 
-    private Boolean registerNewUserClass(Player player, ClassEnum selectedClass) {
+    private boolean classItemWasClicked(GuiItemConfig guiItem, ItemStack eventItem) {
+        return eventItem != null && eventItem.getType().equals(Material.getMaterial(guiItem.getMaterial()));
+    }
+
+    private Boolean registerNewUserClass(Player player, String className) {
         String playerUUID = player.getUniqueId().toString();
-        Long classId = Long.valueOf(selectedClass.ordinal() + 1); // Could be better
 
-        UserClassEntity userClassEntity = userClassService.get(playerUUID, classId);
+        UserEntity user = userService.get(playerUUID);
+        ClassEntity classEntity = classService.getByName(className);
 
-        if (userClassEntity == null) {
-            userClassEntity = new UserClassEntity(playerUUID, classId);
+        if (userDoesntHaveClass(user, classEntity)) {
+            userService.addUserClass(playerUUID, classEntity.getId());
 
-            userClassService.insert(userClassEntity);
+            for (SkillEntity skill : classEntity.getSkills()) {
+                userService.addUserSkill(playerUUID, skill.getId());
+            }
 
             return true;
         } else {
             return false;
         }
+    }
+
+    private boolean userDoesntHaveClass(UserEntity user, ClassEntity classEntity) {
+        return user.getClasses().stream().noneMatch(userClass -> userClass.getName().equals(classEntity.getName()));
     }
 
     private void awardClassItems(Player player, ClassEnum selectedClass) {

@@ -26,7 +26,6 @@ public class SqliteConnection {
     public void close() throws SQLException {
         if (con != null) {
             con.close();
-            con = null;
         }
     }
 

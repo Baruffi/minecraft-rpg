@@ -1,26 +1,25 @@
 package br.com.rafaelfaustini.minecraftrpg.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ClassEntity {
+public class SkillEntity {
     private Long id;
     private String name;
+    private Integer type;
     private Long itemId;
     private ItemEntity item;
-    private List<SkillEntity> skills = new ArrayList<>();
 
-    public ClassEntity() {
+    public SkillEntity() {
     }
 
-    public ClassEntity(String name, Long itemId) {
+    public SkillEntity(String name, Integer type, Long itemId) {
         this.name = name;
+        this.type = type;
         this.itemId = itemId;
     }
 
-    public ClassEntity(Long id, String name, Long itemId) {
+    public SkillEntity(Long id, String name, Integer type, Long itemId) {
         this.id = id;
         this.name = name;
+        this.type = type;
         this.itemId = itemId;
     }
 
@@ -40,6 +39,14 @@ public class ClassEntity {
         this.name = name;
     }
 
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
     public Long getItemId() {
         return itemId;
     }
@@ -54,13 +61,5 @@ public class ClassEntity {
 
     public void setItem(ItemEntity item) {
         this.item = item;
-    }
-
-    public List<SkillEntity> getSkills() {
-        return skills;
-    }
-
-    public void setSkills(List<SkillEntity> skills) {
-        this.skills = skills;
     }
 }

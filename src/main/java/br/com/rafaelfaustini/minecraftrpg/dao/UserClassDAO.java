@@ -94,7 +94,7 @@ public class UserClassDAO implements IDao<Long, UserClassEntity> { // <Type of i
         ps.setString(1, userUUID);
         rs = ps.executeQuery();
 
-        if (rs.next()) {
+        while (rs.next()) {
             Long id = rs.getLong(1);
             Long classId = rs.getLong(2);
 
@@ -127,23 +127,23 @@ public class UserClassDAO implements IDao<Long, UserClassEntity> { // <Type of i
     }
 
     @Override
-    public void insert(UserClassEntity UserClassEntity) throws Exception {
+    public void insert(UserClassEntity userClassEntity) throws Exception {
         String sql = "INSERT INTO USERS_CLASSES (USER_UUID, CLASS_ID) VALUES ( ?, ? )";
         PreparedStatement ps = connection.prepareStatement(sql);
 
-        ps.setString(1, UserClassEntity.getUserUUID());
-        ps.setLong(2, UserClassEntity.getClassId());
+        ps.setString(1, userClassEntity.getUserUUID());
+        ps.setLong(2, userClassEntity.getClassId());
         ps.execute();
     }
 
     @Override
-    public void update(UserClassEntity UserClassEntity) throws Exception {
+    public void update(UserClassEntity userClassEntity) throws Exception {
         String sql = "UPDATE USERS_CLASSES SET USER_UUID=?, CLASS_ID=? WHERE ID=?";
         PreparedStatement ps = connection.prepareStatement(sql);
 
-        ps.setString(1, UserClassEntity.getUserUUID());
-        ps.setLong(2, UserClassEntity.getClassId());
-        ps.setLong(3, UserClassEntity.getId());
+        ps.setString(1, userClassEntity.getUserUUID());
+        ps.setLong(2, userClassEntity.getClassId());
+        ps.setLong(3, userClassEntity.getId());
         ps.execute();
     }
 
