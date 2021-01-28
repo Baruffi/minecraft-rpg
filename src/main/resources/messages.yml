@@ -5,6 +5,7 @@ Events:
   classChoice: "&bYou have chosen the %s &bclass!"
   skillChoice: "&bYou have selected the %s &bskill!"
   skillCast: "&bYou have casted the %s &bskill!"
+  skillCooldown: "&bThe %s &bskill is still on cooldown for %x more seconds!"
 Utils:
   loadingException: "An error occurred while loading the plugin"
   commandException: "An error occurred while executing a command"

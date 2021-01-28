@@ -19,7 +19,7 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
 
     @Override
     public void createTable() throws Exception {
-        String sql = "CREATE TABLE IF NOT EXISTS USERS_SKILLS ( ID INTEGER PRIMARY KEY, USER_UUID TEXT, SKILL_ID INTEGER, STATUS INTEGER, FOREIGN KEY(USER_UUID) REFERENCES USERS(UUID), FOREIGN KEY(SKILL_ID) REFERENCES SKILLS(ID), UNIQUE (USER_UUID, SKILL_ID) )";
+        String sql = "CREATE TABLE IF NOT EXISTS USERS_SKILLS ( ID INTEGER PRIMARY KEY, USER_UUID TEXT, SKILL_ID INTEGER, STATUS INTEGER, COOLDOWN_UNTIL NUMBER, FOREIGN KEY(USER_UUID) REFERENCES USERS(UUID), FOREIGN KEY(SKILL_ID) REFERENCES SKILLS(ID), UNIQUE (USER_UUID, SKILL_ID) )";
         PreparedStatement ps = connection.prepareStatement(sql);
 
         ps.execute();
@@ -29,7 +29,7 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
     public UserSkillEntity get(Long id) throws Exception {
         ResultSet rs = null;
         UserSkillEntity userSkill = null;
-        String sql = "SELECT USER_UUID, SKILL_ID, STATUS FROM USERS_SKILLS WHERE ID=?";
+        String sql = "SELECT USER_UUID, SKILL_ID, STATUS, COOLDOWN_UNTIL FROM USERS_SKILLS WHERE ID=?";
         PreparedStatement ps = connection.prepareStatement(sql);
 
         ps.setLong(1, id);
@@ -39,8 +39,9 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
             String userUUID = rs.getString(1);
             Long skillId = rs.getLong(2);
             Integer status = rs.getInt(3);
+            Long cooldownUntil = rs.getLong(4);
 
-            userSkill = new UserSkillEntity(id, userUUID, skillId, status);
+            userSkill = new UserSkillEntity(id, userUUID, skillId, status, cooldownUntil);
         }
 
         return userSkill;
@@ -49,7 +50,7 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
     public UserSkillEntity get(String userUUID, Long skillId) throws Exception {
         ResultSet rs = null;
         UserSkillEntity userSkill = null;
-        String sql = "SELECT ID, STATUS FROM USERS_SKILLS WHERE USER_UUID=? AND SKILL_ID=?";
+        String sql = "SELECT ID, STATUS, COOLDOWN_UNTIL FROM USERS_SKILLS WHERE USER_UUID=? AND SKILL_ID=?";
         PreparedStatement ps = connection.prepareStatement(sql);
 
         ps.setString(1, userUUID);
@@ -59,8 +60,9 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
         if (rs.next()) {
             Long id = rs.getLong(1);
             Integer status = rs.getInt(2);
+            Long cooldownUntil = rs.getLong(3);
 
-            userSkill = new UserSkillEntity(id, userUUID, skillId, status);
+            userSkill = new UserSkillEntity(id, userUUID, skillId, status, cooldownUntil);
         }
 
         return userSkill;
@@ -70,7 +72,7 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
     public List<UserSkillEntity> getAll() throws Exception {
         ResultSet rs = null;
         List<UserSkillEntity> userSkills = new ArrayList<>();
-        String sql = "SELECT ID, USER_UUID, SKILL_ID, STATUS FROM USERS_SKILLS";
+        String sql = "SELECT ID, USER_UUID, SKILL_ID, STATUS, COOLDOWN_UNTIL FROM USERS_SKILLS";
         PreparedStatement ps = connection.prepareStatement(sql);
 
         rs = ps.executeQuery();
@@ -80,8 +82,9 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
             String userUUID = rs.getString(2);
             Long skillId = rs.getLong(3);
             Integer status = rs.getInt(4);
+            Long cooldownUntil = rs.getLong(5);
 
-            UserSkillEntity userSkill = new UserSkillEntity(id, userUUID, skillId, status);
+            UserSkillEntity userSkill = new UserSkillEntity(id, userUUID, skillId, status, cooldownUntil);
 
             userSkills.add(userSkill);
         }
@@ -92,7 +95,7 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
     public List<UserSkillEntity> getAllByUser(String userUUID) throws Exception {
         ResultSet rs = null;
         List<UserSkillEntity> userSkills = new ArrayList<>();
-        String sql = "SELECT ID, SKILL_ID, STATUS FROM USERS_SKILLS WHERE USER_UUID=?";
+        String sql = "SELECT ID, SKILL_ID, STATUS, COOLDOWN_UNTIL FROM USERS_SKILLS WHERE USER_UUID=?";
         PreparedStatement ps = connection.prepareStatement(sql);
 
         ps.setString(1, userUUID);
@@ -102,8 +105,9 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
             Long id = rs.getLong(1);
             Long skillId = rs.getLong(2);
             Integer status = rs.getInt(3);
+            Long cooldownUntil = rs.getLong(4);
 
-            UserSkillEntity userSkill = new UserSkillEntity(id, userUUID, skillId, status);
+            UserSkillEntity userSkill = new UserSkillEntity(id, userUUID, skillId, status, cooldownUntil);
 
             userSkills.add(userSkill);
         }
@@ -114,7 +118,7 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
     public List<UserSkillEntity> getAllBySkill(Long skillId) throws Exception {
         ResultSet rs = null;
         List<UserSkillEntity> userSkills = new ArrayList<>();
-        String sql = "SELECT ID, USER_UUID, STATUS FROM USERS_SKILLS WHERE SKILL_ID=?";
+        String sql = "SELECT ID, USER_UUID, STATUS, COOLDOWN_UNTIL FROM USERS_SKILLS WHERE SKILL_ID=?";
         PreparedStatement ps = connection.prepareStatement(sql);
 
         ps.setLong(1, skillId);
@@ -124,8 +128,9 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
             Long id = rs.getLong(1);
             String userUUID = rs.getString(2);
             Integer status = rs.getInt(3);
+            Long cooldownUntil = rs.getLong(4);
 
-            UserSkillEntity userSkill = new UserSkillEntity(id, userUUID, skillId, status);
+            UserSkillEntity userSkill = new UserSkillEntity(id, userUUID, skillId, status, cooldownUntil);
 
             userSkills.add(userSkill);
         }
@@ -135,24 +140,26 @@ public class UserSkillDAO implements IDao<Long, UserSkillEntity> { // <Type of i
 
     @Override
     public void insert(UserSkillEntity userSkillEntity) throws Exception {
-        String sql = "INSERT INTO USERS_SKILLS (USER_UUID, SKILL_ID, STATUS) VALUES ( ?, ?, ? )";
+        String sql = "INSERT INTO USERS_SKILLS (USER_UUID, SKILL_ID, STATUS, COOLDOWN_UNTIL) VALUES ( ?, ?, ?, ? )";
         PreparedStatement ps = connection.prepareStatement(sql);
 
         ps.setString(1, userSkillEntity.getUserUUID());
         ps.setLong(2, userSkillEntity.getSkillId());
         ps.setInt(3, userSkillEntity.getStatus());
+        ps.setLong(4, userSkillEntity.getCooldownUntil());
         ps.execute();
     }
 
     @Override
     public void update(UserSkillEntity userSkillEntity) throws Exception {
-        String sql = "UPDATE USERS_SKILLS SET USER_UUID=?, SKILL_ID=?, STATUS=? WHERE ID=?";
+        String sql = "UPDATE USERS_SKILLS SET USER_UUID=?, SKILL_ID=?, STATUS=?, COOLDOWN_UNTIL=? WHERE ID=?";
         PreparedStatement ps = connection.prepareStatement(sql);
 
         ps.setString(1, userSkillEntity.getUserUUID());
         ps.setLong(2, userSkillEntity.getSkillId());
         ps.setInt(3, userSkillEntity.getStatus());
-        ps.setLong(4, userSkillEntity.getId());
+        ps.setLong(4, userSkillEntity.getCooldownUntil());
+        ps.setLong(5, userSkillEntity.getId());
 
         ps.execute();
     }

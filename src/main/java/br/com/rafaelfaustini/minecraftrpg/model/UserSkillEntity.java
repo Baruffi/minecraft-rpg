@@ -5,21 +5,24 @@ public class UserSkillEntity {
     private String userUUID;
     private Long skillId;
     private Integer status;
+    private Long cooldownUntil;
 
     public UserSkillEntity() {
     }
 
-    public UserSkillEntity(String userUUID, Long skillId, Integer status) {
+    public UserSkillEntity(String userUUID, Long skillId, Integer status, Long cooldownUntil) {
         this.userUUID = userUUID;
         this.skillId = skillId;
         this.status = status;
+        this.cooldownUntil = cooldownUntil;
     }
 
-    public UserSkillEntity(Long id, String userUUID, Long skillId, Integer status) {
+    public UserSkillEntity(Long id, String userUUID, Long skillId, Integer status, Long cooldownUntil) {
         this.id = id;
         this.userUUID = userUUID;
         this.skillId = skillId;
         this.status = status;
+        this.cooldownUntil = cooldownUntil;
     }
 
     public Long getId() {
@@ -52,5 +55,13 @@ public class UserSkillEntity {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Long getCooldownUntil() {
+        return cooldownUntil;
+    }
+
+    public void setCooldownUntil(Long cooldownUntil) {
+        this.cooldownUntil = cooldownUntil;
     }
 }

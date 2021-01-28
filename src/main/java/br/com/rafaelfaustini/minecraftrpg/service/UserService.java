@@ -2,7 +2,6 @@ package br.com.rafaelfaustini.minecraftrpg.service;
 
 import java.sql.Connection;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import br.com.rafaelfaustini.minecraftrpg.dao.ClassDAO;
@@ -22,6 +21,7 @@ import br.com.rafaelfaustini.minecraftrpg.model.UserClassEntity;
 import br.com.rafaelfaustini.minecraftrpg.model.UserEntity;
 import br.com.rafaelfaustini.minecraftrpg.model.UserSkillEntity;
 import br.com.rafaelfaustini.minecraftrpg.utils.LoggingUtil;
+import br.com.rafaelfaustini.minecraftrpg.utils.TimeUtil;
 
 public class UserService {
 
@@ -146,6 +146,28 @@ public class UserService {
         }
     }
 
+    public void updateSkillCooldown(String uuid, Long skillId, int cooldownSeconds) {
+        SqliteConnection sql = new SqliteConnection();
+
+        try {
+            Connection con = sql.openConnection();
+            UserSkillDAO userSkillDAO = new UserSkillDAO(con);
+
+            UserSkillEntity userSkillEntity = userSkillDAO.get(uuid, skillId);
+
+            userSkillEntity.setCooldownUntil(TimeUtil.getCooldownTime(cooldownSeconds));
+
+            userSkillDAO.update(userSkillEntity);
+        } catch (Exception e) {
+            LoggingUtil.error("Database Update UserEntity", e);
+        } finally {
+            try {
+                sql.close();
+            } catch (Exception e) {
+            }
+        }
+    }
+
     public void addUserClass(String uuid, Long classId) {
         SqliteConnection sql = new SqliteConnection();
 
@@ -174,7 +196,7 @@ public class UserService {
             UserSkillDAO userSkillDAO = new UserSkillDAO(con);
 
             UserSkillEntity userSkillEntity = new UserSkillEntity(uuid, skillId,
-                    SkillStatusEnum.INACTIVE.getStatusValue());
+                    SkillStatusEnum.INACTIVE.getStatusValue(), TimeUtil.getCurrentTime());
 
             userSkillDAO.insert(userSkillEntity);
         } catch (Exception e) {
@@ -234,7 +256,7 @@ public class UserService {
         LoreDAO loreDAO = new LoreDAO(con);
 
         List<SkillEntity> skills = user.getSkills();
-        Map<String, Integer> skillStatusMap = user.getSkillStatusMap();
+        List<UserSkillEntity> userSkillList = user.getUserSkillList();
         List<UserSkillEntity> userSkills = userSkillDAO.getAllByUser(user.getUUID());
 
         for (UserSkillEntity userSkill : userSkills) {
@@ -246,10 +268,10 @@ public class UserService {
             skill.setItem(item);
             skills.add(skill);
 
-            skillStatusMap.put(skill.getName(), userSkill.getStatus());
+            userSkillList.add(userSkill);
         }
 
-        user.setSkillStatusMap(skillStatusMap); // mutation side-effects!!! change later
+        user.setUserSkillList(userSkillList); // TODO: move this later
 
         return skills;
     }

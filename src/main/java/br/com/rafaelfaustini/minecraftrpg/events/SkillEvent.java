@@ -26,10 +26,12 @@ import br.com.rafaelfaustini.minecraftrpg.enums.SkillStatusEnum;
 import br.com.rafaelfaustini.minecraftrpg.model.ItemEntity;
 import br.com.rafaelfaustini.minecraftrpg.model.SkillEntity;
 import br.com.rafaelfaustini.minecraftrpg.model.UserEntity;
+import br.com.rafaelfaustini.minecraftrpg.model.UserSkillEntity;
 import br.com.rafaelfaustini.minecraftrpg.service.SkillService;
 import br.com.rafaelfaustini.minecraftrpg.service.UserService;
 import br.com.rafaelfaustini.minecraftrpg.utils.GuiUtil;
 import br.com.rafaelfaustini.minecraftrpg.utils.TextUtil;
+import br.com.rafaelfaustini.minecraftrpg.utils.TimeUtil;
 
 public class SkillEvent implements Listener {
 
@@ -116,7 +118,7 @@ public class SkillEvent implements Listener {
         SkillEntity skill = skillService.getByName(skillName);
 
         if (userHasSkill(user, skill)) {
-            Integer status = user.getSkillStatusMap().get(skill.getName());
+            Integer status = getUserSkillStatus(user, skill);
 
             if (status == SkillStatusEnum.ACTIVE.getStatusValue()) {
                 status = SkillStatusEnum.INACTIVE.getStatusValue();
@@ -136,6 +138,11 @@ public class SkillEvent implements Listener {
 
             return false;
         }
+    }
+
+    private Integer getUserSkillStatus(UserEntity user, SkillEntity skill) {
+        return user.getUserSkillList().stream().filter(userSkill -> userSkill.getSkillId().equals(skill.getId()))
+                .findFirst().get().getStatus(); // TODO: fix this
     }
 
     private boolean userHasSkill(UserEntity user, SkillEntity skill) {
@@ -162,10 +169,11 @@ public class SkillEvent implements Listener {
         String playerUUID = player.getUniqueId().toString();
         UserEntity user = userService.get(playerUUID);
 
-        for (SkillEntity skillEntity : user.getSkills()) {
-            ItemEntity guiItem = skillEntity.getItem();
+        for (UserSkillEntity userSkill : user.getUserSkillList()) {
+            SkillEntity skill = skillService.get(userSkill.getSkillId());
+            ItemEntity guiItem = skill.getItem();
             String displayName = String.format("%s &d(%s)", guiItem.getDisplayName(),
-                    SkillStatusEnum.fromInteger(user.getSkillStatusMap().get(skillEntity.getName())).toString());
+                    SkillStatusEnum.fromInteger(userSkill.getStatus()).toString());
             ItemStack item = GuiUtil.getSimpleItem(displayName, guiItem.getMaterial(), guiItem.getLore());
 
             items.add(item);
@@ -181,17 +189,33 @@ public class SkillEvent implements Listener {
 
     private void castCurrentActiveSkills(Player player) {
         String playerUUID = player.getUniqueId().toString();
-        UserEntity userEntity = userService.get(playerUUID);
+        UserEntity user = userService.get(playerUUID);
 
-        for (String skillName : userEntity.getSkillStatusMap().keySet()) {
-            Integer skillStatus = userEntity.getSkillStatusMap().get(skillName);
+        for (UserSkillEntity userSkill : user.getUserSkillList()) {
+            Integer skillStatus = userSkill.getStatus();
 
             if (skillStatus == SkillStatusEnum.ACTIVE.getStatusValue()) {
-                SkillEntity skill = skillService.getByName(skillName);
+                SkillEntity skill = skillService.get(userSkill.getSkillId());
 
-                castSkill(player, skill);
-                sendCastMessage(player, skill);
+                if (registerSkillCooldown(userSkill)) {
+                    castSkill(player, skill);
+                    sendCastMessage(player, skill);
+                } else {
+                    sendCooldownMessage(player, skill, userSkill);
+                }
             }
+        }
+    }
+
+    private boolean registerSkillCooldown(UserSkillEntity userSkill) {
+        Long cooldownTimestamp = userSkill.getCooldownUntil();
+
+        if (cooldownTimestamp < TimeUtil.getCurrentTime()) {
+            userService.updateSkillCooldown(userSkill.getUserUUID(), userSkill.getSkillId(), 10);
+
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -211,6 +235,13 @@ public class SkillEvent implements Listener {
 
     private void sendCastMessage(Player player, SkillEntity skill) {
         String message = String.format(messageConfig.getSkillCast(), skill.getItem().getDisplayName());
+
+        player.sendMessage(TextUtil.coloredText(message));
+    }
+
+    private void sendCooldownMessage(Player player, SkillEntity skill, UserSkillEntity userSkill) {
+        String message = String.format(messageConfig.getSkillCooldown(), skill.getItem().getDisplayName(),
+                TimeUtil.toSeconds(userSkill.getCooldownUntil() - TimeUtil.getCurrentTime()));
 
         player.sendMessage(TextUtil.coloredText(message));
     }

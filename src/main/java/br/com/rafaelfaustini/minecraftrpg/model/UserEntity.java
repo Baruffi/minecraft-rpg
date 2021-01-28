@@ -1,16 +1,14 @@
 package br.com.rafaelfaustini.minecraftrpg.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class UserEntity {
     private String UUID;
     private String lastAccountName;
     private List<ClassEntity> classes = new ArrayList<>();
     private List<SkillEntity> skills = new ArrayList<>();
-    private Map<String, Integer> skillStatusMap = new HashMap<>();
+    private List<UserSkillEntity> userSkillList = new ArrayList<>();
 
     public UserEntity() {
     }
@@ -52,11 +50,11 @@ public class UserEntity {
         this.skills = skills;
     }
 
-    public Map<String, Integer> getSkillStatusMap() {
-        return skillStatusMap;
+    public List<UserSkillEntity> getUserSkillList() {
+        return userSkillList;
     }
 
-    public void setSkillStatusMap(Map<String, Integer> skillStatusMap) {
-        this.skillStatusMap = skillStatusMap;
+    public void setUserSkillList(List<UserSkillEntity> userSkillList) {
+        this.userSkillList = userSkillList;
     }
 }
