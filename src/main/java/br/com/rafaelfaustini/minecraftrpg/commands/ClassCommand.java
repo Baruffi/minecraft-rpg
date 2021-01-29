@@ -1,6 +1,5 @@
 package br.com.rafaelfaustini.minecraftrpg.commands;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -26,30 +25,30 @@ public class ClassCommand implements CommandExecutor {
 
     private final MessageConfig messageConfig;
     private final GuiConfig guiClassConfig;
+
     private final UserService userService;
 
     public ClassCommand() {
         messageConfig = ConfigurationProvider.getMessageConfig();
         guiClassConfig = ConfigurationProvider.getClassGuiConfig();
+
         userService = new UserService();
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equals("class")) {
-            if (sender instanceof Player) {
-                Player player = (Player) sender;
-                String playerUUID = player.getUniqueId().toString();
-                Integer playerLevel = player.getLevel();
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            String playerUUID = player.getUniqueId().toString();
+            Integer playerLevel = player.getLevel();
 
-                List<ClassEntity> userClasses = userService.get(playerUUID).getClasses();
+            List<ClassEntity> userClasses = userService.get(playerUUID).getClasses();
 
-                if (userClasses.isEmpty() || playerLevel > MULTI_CLASS_LEVEL) {
-                    openClassChoiceInventory(player);
-                } else {
-                    for (ClassEntity userClass : userClasses) {
-                        sendClassMessage(player, userClass);
-                    }
+            if (userClasses.isEmpty() || playerLevel > MULTI_CLASS_LEVEL) {
+                openClassChoiceInventory(player);
+            } else {
+                for (ClassEntity userClass : userClasses) {
+                    sendClassMessage(player, userClass);
                 }
             }
         }
@@ -61,15 +60,12 @@ public class ClassCommand implements CommandExecutor {
         Inventory gui = Bukkit.createInventory(player, 9, guiClassConfig.getGuiTitle());
 
         List<GuiItemConfig> guiItems = guiClassConfig.getGuiItems();
-        List<ItemStack> items = new ArrayList<>();
 
         for (GuiItemConfig guiItem : guiItems) {
             ItemStack item = GuiUtil.getSimpleItem(guiItem.getDisplayName(), guiItem.getMaterial(), guiItem.getLore());
 
-            items.add(item);
+            gui.addItem(item);
         }
-
-        gui.setContents(items.toArray(new ItemStack[0]));
 
         player.openInventory(gui);
     }

@@ -3,6 +3,7 @@ Commands:
 Events:
   welcome: "&bType &c/class &bto get started"
   classChoice: "&bYou have chosen the %s &bclass!"
+  skillObtained: "&bYou have obtained the %s &bskill!"
   skillChoice: "&bYou have selected the %s &bskill!"
   skillCast: "&bYou have casted the %s &bskill!"
   skillCooldown: "&bThe %s &bskill is still on cooldown for %x more seconds!"

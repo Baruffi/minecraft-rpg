@@ -196,7 +196,7 @@ public class UserService {
             UserSkillDAO userSkillDAO = new UserSkillDAO(con);
 
             UserSkillEntity userSkillEntity = new UserSkillEntity(uuid, skillId,
-                    SkillStatusEnum.INACTIVE.getStatusValue(), TimeUtil.getCurrentTime());
+                    SkillStatusEnum.UNOBTAINED.getStatusValue(), TimeUtil.getCurrentTime());
 
             userSkillDAO.insert(userSkillEntity);
         } catch (Exception e) {

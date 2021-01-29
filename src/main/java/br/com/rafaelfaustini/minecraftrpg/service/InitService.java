@@ -18,6 +18,7 @@ import br.com.rafaelfaustini.minecraftrpg.dao.UserDAO;
 import br.com.rafaelfaustini.minecraftrpg.dao.UserSkillDAO;
 import br.com.rafaelfaustini.minecraftrpg.enums.ActiveSkillEnum;
 import br.com.rafaelfaustini.minecraftrpg.enums.ClassEnum;
+import br.com.rafaelfaustini.minecraftrpg.enums.PassiveSkillEnum;
 import br.com.rafaelfaustini.minecraftrpg.enums.SkillTypeEnum;
 import br.com.rafaelfaustini.minecraftrpg.model.ClassEntity;
 import br.com.rafaelfaustini.minecraftrpg.model.ClassSkillEntity;
@@ -61,7 +62,7 @@ public class InitService {
         }
     }
 
-    public void fillTables(GuiConfig classGuiConfig, GuiConfig activeSkillGuiConfig) {
+    public void fillTables(GuiConfig classGuiConfig, GuiConfig activeSkillGuiConfig, GuiConfig passiveSkillGuiConfig) {
         SqliteConnection sql = new SqliteConnection();
 
         try {
@@ -76,7 +77,8 @@ public class InitService {
             if (databaseIsEmpty(classDAO, skillDAO, classSkillDAO, itemDAO, loreDAO)) {
                 Map<String, ClassEntity> classes = fillClassesAndItems(classGuiConfig, classDAO, itemDAO, loreDAO);
 
-                Map<String, SkillEntity> skills = fillSkillsAndItems(activeSkillGuiConfig, skillDAO, itemDAO, loreDAO);
+                Map<String, SkillEntity> skills = fillSkillsAndItems(activeSkillGuiConfig, passiveSkillGuiConfig,
+                        skillDAO, itemDAO, loreDAO);
 
                 relateClassesToSkills(classSkillDAO, classes, skills);
             }
@@ -99,17 +101,24 @@ public class InitService {
     private void relateClassesToSkills(ClassSkillDAO classSkillDAO, Map<String, ClassEntity> classes,
             Map<String, SkillEntity> skills) throws Exception {
         ClassSkillEntity classSkillEntity = new ClassSkillEntity(classes.get(ClassEnum.MAGE.getClassName()).getId(),
-                skills.get(ActiveSkillEnum.FIREBALL.getActiveSkillName()).getId()); // Gives mages fireballs
+                skills.get(ActiveSkillEnum.FIREBALL.getActiveSkillName()).getId()); // Gives mages the fireball active
+
+        classSkillDAO.insert(classSkillEntity);
+
+        classSkillEntity = new ClassSkillEntity(classes.get(ClassEnum.ROGUE.getClassName()).getId(),
+                skills.get(PassiveSkillEnum.SNEAK.getPassiveSkillName()).getId()); // Gives rogues the sneak passive
 
         classSkillDAO.insert(classSkillEntity);
     }
 
-    private Map<String, SkillEntity> fillSkillsAndItems(GuiConfig activeSkillGuiConfig, SkillDAO skillDAO,
-            ItemDAO itemDAO, LoreDAO loreDAO) throws Exception {
-        List<GuiItemConfig> guiSkillItemConfigs = activeSkillGuiConfig.getGuiItems();
+    private Map<String, SkillEntity> fillSkillsAndItems(GuiConfig activeSkillGuiConfig, GuiConfig passiveSkillGuiConfig,
+            SkillDAO skillDAO, ItemDAO itemDAO, LoreDAO loreDAO) throws Exception {
+        List<GuiItemConfig> guiActiveSkillItemConfigs = activeSkillGuiConfig.getGuiItems();
+        List<GuiItemConfig> guiPassiveSkillItemConfigs = passiveSkillGuiConfig.getGuiItems();
+
         Map<String, SkillEntity> skills = new HashMap<>();
 
-        for (GuiItemConfig guiItemConfig : guiSkillItemConfigs) {
+        for (GuiItemConfig guiItemConfig : guiActiveSkillItemConfigs) {
             ItemEntity item = new ItemEntity(guiItemConfig.getKey(), guiItemConfig.getDisplayName(),
                     guiItemConfig.getMaterial());
 
@@ -132,6 +141,31 @@ public class InitService {
 
             skills.put(skill.getName(), skill);
         }
+
+        for (GuiItemConfig guiItemConfig : guiPassiveSkillItemConfigs) {
+            ItemEntity item = new ItemEntity(guiItemConfig.getKey(), guiItemConfig.getDisplayName(),
+                    guiItemConfig.getMaterial());
+
+            itemDAO.insert(item);
+
+            item = itemDAO.getByName(item.getName());
+
+            for (String loreConfig : guiItemConfig.getLore()) {
+                LoreEntity lore = new LoreEntity(loreConfig, item.getId());
+
+                loreDAO.insert(lore);
+            }
+
+            SkillEntity skill = new SkillEntity(guiItemConfig.getKey(), SkillTypeEnum.PASSIVE.getTypeValue(),
+                    item.getId());
+
+            skillDAO.insert(skill);
+
+            skill = skillDAO.getByName(skill.getName());
+
+            skills.put(skill.getName(), skill);
+        }
+
         return skills;
     }
 

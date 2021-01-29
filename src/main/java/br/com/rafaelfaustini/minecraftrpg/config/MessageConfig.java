@@ -4,6 +4,7 @@ public class MessageConfig {
     private String welcome;
     private String classChoice;
     private String classAlreadyChosen;
+    private String skillObtained;
     private String skillChoice;
     private String skillCast;
     private String skillCooldown;
@@ -15,6 +16,7 @@ public class MessageConfig {
         welcome = customMessages.getString("Events.welcome");
         classChoice = customMessages.getString("Events.classChoice");
         classAlreadyChosen = customMessages.getString("Commands.classAlreadyChosen");
+        skillObtained = customMessages.getString("Events.skillObtained");
         skillChoice = customMessages.getString("Events.skillChoice");
         skillCast = customMessages.getString("Events.skillCast");
         skillCooldown = customMessages.getString("Events.skillCooldown");
@@ -45,6 +47,14 @@ public class MessageConfig {
 
     public void setClassAlreadyChosen(String classAlreadyChosen) {
         this.classAlreadyChosen = classAlreadyChosen;
+    }
+
+    public String getSkillObtained() {
+        return skillObtained;
+    }
+
+    public void setSkillObtained(String skillObtained) {
+        this.skillObtained = skillObtained;
     }
 
     public String getSkillChoice() {

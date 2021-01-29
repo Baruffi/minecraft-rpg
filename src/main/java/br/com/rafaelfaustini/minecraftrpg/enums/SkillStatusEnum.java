@@ -1,7 +1,7 @@
 package br.com.rafaelfaustini.minecraftrpg.enums;
 
 public enum SkillStatusEnum {
-    INACTIVE(0), ACTIVE(1);
+    UNOBTAINED(0), INACTIVE(1), ACTIVE(2);
 
     private Integer statusValue;
 

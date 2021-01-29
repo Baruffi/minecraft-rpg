@@ -7,3 +7,6 @@ commands:
   class:
     description: Choose your primary class!
     usage: /<command>
+  tree:
+    description: Obtain new skills!
+    usage: /<command>

@@ -43,6 +43,32 @@ Class:
         - "&bA charming bard"
         - "&bcheering everyone with"
         - "&cthe power of music!"
+SkillTree:
+  title: "Skill tree menu"
+  items:
+    scrollLeft:
+      displayName: "&aScroll Left"
+      material: CLAY
+      lore:
+        - "&aScrolls to the left."
+    scrollRight:
+      displayName: "&aScroll Right"
+      material: CLAY
+      lore:
+        - "&aScrolls to the right."
+Skill:
+  title: "Skill cast menu"
+  items:
+    active:
+      displayName: "&aActives"
+      material: FIRE_CHARGE
+      lore:
+        - "&aView and activate your active skills."
+    passive:
+      displayName: "&aPassives"
+      material: LEATHER_BOOTS
+      lore:
+        - "&aView and activate your passive skills."
 ActiveSkill:
   title: "Choose one of the available active skills: "
   items:
@@ -52,3 +78,12 @@ ActiveSkill:
       lore:
         - "&bA well known fire spell"
         - "&ccapable of immense destruction."
+PassiveSkill:
+  title: "Choose one of the available passive skills: "
+  items:
+    sneak:
+      displayName: "&aSneak"
+      material: LEATHER_BOOTS
+      lore:
+        - "&bAn hability possessed by those skilled in"
+        - "&chiding and seeking."

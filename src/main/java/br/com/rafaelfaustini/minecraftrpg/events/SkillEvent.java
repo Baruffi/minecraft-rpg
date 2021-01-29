@@ -2,6 +2,7 @@ package br.com.rafaelfaustini.minecraftrpg.events;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -23,6 +24,7 @@ import br.com.rafaelfaustini.minecraftrpg.config.GuiItemConfig;
 import br.com.rafaelfaustini.minecraftrpg.config.MessageConfig;
 import br.com.rafaelfaustini.minecraftrpg.enums.ActiveSkillEnum;
 import br.com.rafaelfaustini.minecraftrpg.enums.SkillStatusEnum;
+import br.com.rafaelfaustini.minecraftrpg.enums.SkillTypeEnum;
 import br.com.rafaelfaustini.minecraftrpg.model.ItemEntity;
 import br.com.rafaelfaustini.minecraftrpg.model.SkillEntity;
 import br.com.rafaelfaustini.minecraftrpg.model.UserEntity;
@@ -36,7 +38,9 @@ import br.com.rafaelfaustini.minecraftrpg.utils.TimeUtil;
 public class SkillEvent implements Listener {
 
     private final MessageConfig messageConfig;
+    private final GuiConfig guiSkillConfig;
     private final GuiConfig guiActiveSkillConfig;
+    private final GuiConfig guiPassiveSkillConfig;
 
     private final UserService userService;
     private final SkillService skillService;
@@ -45,7 +49,9 @@ public class SkillEvent implements Listener {
 
     public SkillEvent() {
         messageConfig = ConfigurationProvider.getMessageConfig();
+        guiSkillConfig = ConfigurationProvider.getSkillGuiConfig();
         guiActiveSkillConfig = ConfigurationProvider.getActiveSkillGuiConfig();
+        guiPassiveSkillConfig = ConfigurationProvider.getPassiveSkillGuiConfig();
 
         userService = new UserService();
         skillService = new SkillService();
@@ -58,36 +64,6 @@ public class SkillEvent implements Listener {
     }
 
     @EventHandler
-    public void onClick(InventoryClickEvent event) {
-        InventoryView view = event.getView();
-
-        if (view.getTitle().equals(guiActiveSkillConfig.getGuiTitle())) {
-            List<GuiItemConfig> guiItems = guiActiveSkillConfig.getGuiItems();
-
-            for (GuiItemConfig guiItem : guiItems) {
-                ItemStack eventItem = event.getCurrentItem();
-
-                if (skillItemWasClicked(guiItem, eventItem)) {
-                    Player player = (Player) event.getWhoClicked();
-
-                    if (registerUserActiveSkill(player, guiItem.getKey())) {
-                        sendConfirmationMessage(player, guiItem);
-                        closeView(view);
-                    }
-
-                    break;
-                }
-            }
-
-            cancelEvent(event);
-        }
-    }
-
-    private boolean skillItemWasClicked(GuiItemConfig guiItem, ItemStack eventItem) {
-        return eventItem != null && eventItem.getType().equals(Material.getMaterial(guiItem.getMaterial()));
-    }
-
-    @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         Action action = event.getAction();
@@ -95,7 +71,7 @@ public class SkillEvent implements Listener {
 
         if (isValidSkillInteraction(action, itemStack, player)) {
             if (wasARightClick(action)) {
-                openSkillSelectionGui(player);
+                openSkillTypeSelectionGui(player);
             } else {
                 castCurrentActiveSkills(player);
             }
@@ -104,11 +80,82 @@ public class SkillEvent implements Listener {
         }
     }
 
+    @EventHandler
+    public void onClick(InventoryClickEvent event) {
+        InventoryView view = event.getView();
+        List<GuiItemConfig> guiItems = null;
+
+        if (view.getTitle().equals(guiSkillConfig.getGuiTitle())) {
+            guiItems = guiSkillConfig.getGuiItems();
+
+            handleSkillTypeSelection(event, view, guiItems);
+        } else {
+            if (view.getTitle().equals(guiActiveSkillConfig.getGuiTitle())) {
+                guiItems = guiActiveSkillConfig.getGuiItems();
+            } else if (view.getTitle().equals(guiPassiveSkillConfig.getGuiTitle())) {
+                guiItems = guiPassiveSkillConfig.getGuiItems();
+            }
+
+            if (guiItems != null) {
+                handleSkillSelection(event, view, guiItems);
+            }
+        }
+    }
+
+    private void handleSkillTypeSelection(InventoryClickEvent event, InventoryView view, List<GuiItemConfig> guiItems) {
+        for (GuiItemConfig guiItem : guiItems) {
+            ItemStack eventItem = event.getCurrentItem();
+
+            if (eventItemWasClicked(guiItem, eventItem)) {
+                Player player = (Player) event.getWhoClicked();
+
+                cancelEvent(event);
+                openSkillSelectionGui(player, SkillTypeEnum.fromString(guiItem.getKey()));
+
+                break;
+            }
+        }
+    }
+
+    private void handleSkillSelection(InventoryClickEvent event, InventoryView view, List<GuiItemConfig> guiItems) {
+        for (GuiItemConfig guiItem : guiItems) {
+            ItemStack eventItem = event.getCurrentItem();
+
+            if (eventItemWasClicked(guiItem, eventItem)) {
+                Player player = (Player) event.getWhoClicked();
+
+                if (registerUserActiveSkill(player, guiItem.getKey())) {
+                    sendConfirmationMessage(player, guiItem);
+                    closeView(view);
+                }
+
+                break;
+            }
+        }
+
+        cancelEvent(event);
+    }
+
+    private boolean eventItemWasClicked(GuiItemConfig guiItem, ItemStack eventItem) {
+        return eventItem != null && eventItem.getType().equals(Material.getMaterial(guiItem.getMaterial()));
+    }
+
     private boolean isValidSkillInteraction(Action action, ItemStack itemStack, Player player) {
         String playerUUID = player.getUniqueId().toString();
+        UserEntity user = userService.get(playerUUID);
 
-        return holdsAnItem(itemStack) && castItems.contains(itemStack.getType()) && !hitABlock(action)
-                && !userService.get(playerUUID).getSkills().isEmpty();
+        return holdsAnItem(itemStack) && castItems.contains(itemStack.getType()) && didNotHitABlock(action)
+                && isNotAnInventoryClick(player) && userHasObtainedSkill(user);
+    }
+
+    private boolean isNotAnInventoryClick(Player player) {
+        return player.getOpenInventory().getTitle().equals("Crafting"); // TODO: improve this
+    }
+
+    private boolean userHasObtainedSkill(UserEntity user) {
+        return !user.getUserSkillList().stream()
+                .filter(userSkill -> userSkill.getStatus() != SkillStatusEnum.UNOBTAINED.getStatusValue())
+                .collect(Collectors.toList()).isEmpty(); // TODO: improve this
     }
 
     private boolean registerUserActiveSkill(Player player, String skillName) {
@@ -142,7 +189,7 @@ public class SkillEvent implements Listener {
 
     private Integer getUserSkillStatus(UserEntity user, SkillEntity skill) {
         return user.getUserSkillList().stream().filter(userSkill -> userSkill.getSkillId().equals(skill.getId()))
-                .findFirst().get().getStatus(); // TODO: fix this
+                .findFirst().get().getStatus(); // TODO: improve this
     }
 
     private boolean userHasSkill(UserEntity user, SkillEntity skill) {
@@ -163,24 +210,51 @@ public class SkillEvent implements Listener {
         view.close();
     }
 
-    private void openSkillSelectionGui(Player player) {
+    private void openSkillTypeSelectionGui(Player player) {
+        List<ItemStack> items = new ArrayList<>();
+
+        for (GuiItemConfig guiItem : guiSkillConfig.getGuiItems()) {
+            ItemStack item = GuiUtil.getSimpleItem(guiItem.getDisplayName(), guiItem.getMaterial(), guiItem.getLore());
+
+            items.add(item);
+        }
+
+        Inventory gui = Bukkit.createInventory(player, ((items.size() / 9) + 1) * 9, guiSkillConfig.getGuiTitle());
+
+        gui.setContents(items.toArray(new ItemStack[0]));
+
+        player.openInventory(gui);
+    }
+
+    private void openSkillSelectionGui(Player player, SkillTypeEnum type) {
         List<ItemStack> items = new ArrayList<>();
 
         String playerUUID = player.getUniqueId().toString();
         UserEntity user = userService.get(playerUUID);
 
         for (UserSkillEntity userSkill : user.getUserSkillList()) {
-            SkillEntity skill = skillService.get(userSkill.getSkillId());
-            ItemEntity guiItem = skill.getItem();
-            String displayName = String.format("%s &d(%s)", guiItem.getDisplayName(),
-                    SkillStatusEnum.fromInteger(userSkill.getStatus()).toString());
-            ItemStack item = GuiUtil.getSimpleItem(displayName, guiItem.getMaterial(), guiItem.getLore());
+            if (userSkill.getStatus() != SkillStatusEnum.UNOBTAINED.getStatusValue()) {
+                SkillEntity skill = skillService.get(userSkill.getSkillId());
+                if (skill.getType().equals(type.getTypeValue())) {
+                    ItemEntity guiItem = skill.getItem();
+                    String displayName = String.format("%s &d(%s)", guiItem.getDisplayName(),
+                            SkillStatusEnum.fromInteger(userSkill.getStatus()).toString());
+                    ItemStack item = GuiUtil.getSimpleItem(displayName, guiItem.getMaterial(), guiItem.getLore());
 
-            items.add(item);
+                    items.add(item);
+                }
+            }
         }
 
-        Inventory gui = Bukkit.createInventory(player, ((items.size() / 9) + 1) * 9,
-                guiActiveSkillConfig.getGuiTitle());
+        GuiConfig skillSelectionGui = null;
+
+        if (type == SkillTypeEnum.ACTIVE) {
+            skillSelectionGui = guiActiveSkillConfig;
+        } else {
+            skillSelectionGui = guiPassiveSkillConfig;
+        }
+
+        Inventory gui = Bukkit.createInventory(player, ((items.size() / 9) + 1) * 9, skillSelectionGui.getGuiTitle());
 
         gui.setContents(items.toArray(new ItemStack[0]));
 
@@ -192,11 +266,13 @@ public class SkillEvent implements Listener {
         UserEntity user = userService.get(playerUUID);
 
         for (UserSkillEntity userSkill : user.getUserSkillList()) {
+            SkillEntity skill = skillService.get(userSkill.getSkillId());
+
+            Integer skillType = skill.getType();
             Integer skillStatus = userSkill.getStatus();
 
-            if (skillStatus == SkillStatusEnum.ACTIVE.getStatusValue()) {
-                SkillEntity skill = skillService.get(userSkill.getSkillId());
-
+            if (skillType == SkillTypeEnum.ACTIVE.getTypeValue()
+                    && skillStatus == SkillStatusEnum.ACTIVE.getStatusValue()) {
                 if (registerSkillCooldown(userSkill)) {
                     castSkill(player, skill);
                     sendCastMessage(player, skill);
@@ -250,8 +326,8 @@ public class SkillEvent implements Listener {
         return itemStack != null;
     }
 
-    private boolean hitABlock(Action action) {
-        return action == Action.PHYSICAL || action == Action.LEFT_CLICK_BLOCK || action == Action.RIGHT_CLICK_BLOCK;
+    private boolean didNotHitABlock(Action action) {
+        return !(action == Action.PHYSICAL || action == Action.LEFT_CLICK_BLOCK || action == Action.RIGHT_CLICK_BLOCK);
     }
 
     private boolean wasARightClick(Action action) {
